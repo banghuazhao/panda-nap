@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  Panda Nap
+
+  Created by Banghua Zhao on 6/21/20.
+  Copyright © 2020 Banghua Zhao. All rights reserved.
+*/
+
+"CFBundleDisplayName" = "Panda Nap";
+"NSUserTrackingUsageDescription" = "This identifier will be used to deliver personalized ads to you.";

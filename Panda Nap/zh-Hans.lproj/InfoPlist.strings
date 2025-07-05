@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  Panda Nap
+
+  Created by Banghua Zhao on 6/21/20.
+  Copyright © 2020 Banghua Zhao. All rights reserved.
+*/
+
+"CFBundleDisplayName" = "熊猫要午休";
+"NSUserTrackingUsageDescription" = "该标识符将用于向您投放个性化广告。";
