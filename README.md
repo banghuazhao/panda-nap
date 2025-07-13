@@ -14,9 +14,9 @@ A delightful iOS puzzle game where you help a sleepy panda reach her bed by remo
 ## 🖼️ Screenshots
 
 <div align="center">
-  <img src="images/1.png" width="200" alt="Panda Nap Screenshot 1">
-  <img src="images/2.png" width="200" alt="Panda Nap Screenshot 2">
-  <img src="images/3.png" width="200" alt="Panda Nap Screenshot 3">
+  <img src="images/1.png" width="300" alt="Panda Nap Screenshot 1">
+  <img src="images/2.png" width="300" alt="Panda Nap Screenshot 2">
+  <img src="images/3.png" width="300" alt="Panda Nap Screenshot 3">
 </div>
 
 ## 🎮 Game Description
