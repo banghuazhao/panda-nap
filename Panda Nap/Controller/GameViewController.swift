@@ -32,16 +32,19 @@ class GameViewController: UIViewController {
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let scene = (view as? SKView)?.scene else { return }
+        (scene as? GameScene)?.layoutHUD()
+        (scene as? MenuScene)?.layoutUI()
+    }
+
     override var shouldAutorotate: Bool {
         return true
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .landscape
-        } else {
-            return .landscape
-        }
+        .landscape
     }
 
     override var prefersStatusBarHidden: Bool {

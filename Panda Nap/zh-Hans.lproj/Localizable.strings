@@ -76,3 +76,10 @@
 "Nice job!" = "干得好!";
 "Swipe to explore levels" = "滑动探索关卡";
 "Back" = "返回";
+"Levels" = "关卡";
+"Retry" = "重试";
+"Level %d" = "第 %d 关";
+"Tap blocks to guide the panda" = "点击方块，帮助熊猫入睡";
+"Retrying level" = "即将重试本关";
+"Next level coming up" = "即将进入下一关";
+"Finish earlier levels to unlock" = "先完成前面的关卡";

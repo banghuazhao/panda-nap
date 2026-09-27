@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import UIKit
 
 class PandaNode: SKSpriteNode, EventListenerNode {
     func didMoveToScene() {
@@ -44,8 +45,19 @@ class PandaNode: SKSpriteNode, EventListenerNode {
 
         var napPosition = scenePoint
         napPosition.y += 80
-        run(SKAction.group([
-            SKAction.move(to: napPosition, duration: 0.66),
-            SKAction.rotate(toAngle: 0, duration: 0.5)]))
+        let move = SKAction.move(to: napPosition, duration: 0.66)
+        move.timingMode = .easeOut
+        let rotate = SKAction.rotate(toAngle: 0, duration: 0.5)
+        rotate.timingMode = .easeOut
+        if UIAccessibility.isReduceMotionEnabled {
+            run(.group([move, rotate]))
+        } else {
+            let squash = SKAction.group([.scaleX(to: 1.08, duration: 0.12),
+                                         .scaleY(to: 0.91, duration: 0.12)])
+            let settle = SKAction.sequence([squash,
+                                            .scale(to: 1, duration: 0.2)])
+            settle.timingMode = .easeOut
+            run(.sequence([.group([move, rotate]), settle]))
+        }
     }
 }

@@ -20,12 +20,17 @@ class StoneNode: SKSpriteNode, EventListenerNode, InteractiveNode {
   }
   
   func interact() {
+    guard let game = scene as? GameScene, game.playable, isUserInteractionEnabled else { return }
     isUserInteractionEnabled = false
-    
-    run(SKAction.sequence([
-      SKAction.playSoundFileNamed("pop.mp3", waitForCompletion: false),
-      SKAction.removeFromParent()
-      ]))
+    let center = children.isEmpty ? CGPoint.zero : CGPoint(
+      x: children.map(\.position.x).reduce(0, +) / CGFloat(children.count),
+      y: children.map(\.position.y).reduce(0, +) / CGFloat(children.count))
+    game.blockRemoved(at: convert(center, to: game), stone: true)
+    physicsBody = nil
+    let vanish = SKAction.group([.scale(to: 0.72, duration: 0.2), .fadeOut(withDuration: 0.2)])
+    vanish.timingMode = .easeIn
+    run(.sequence([.playSoundFileNamed("pop.mp3", waitForCompletion: false), vanish,
+                   .removeFromParent()]))
   }
   
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -55,4 +60,3 @@ class StoneNode: SKSpriteNode, EventListenerNode, InteractiveNode {
     return compound
   }
 }
-

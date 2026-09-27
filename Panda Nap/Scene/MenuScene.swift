@@ -15,21 +15,34 @@ class MenuScene: SKScene {
     private var levelPoints = [CGPoint]()
     private var panGesture: UIPanGestureRecognizer?
     private var touchStartLocation: CGPoint?
+    private let hint = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
+    private var moreAppsButton: SKShapeNode?
 
     override func didMove(to view: SKView) {
         SKTAudio.sharedInstance().playBackgroundMusic("oboarding.mp3")
 
-        print("MenuScene")
-
         addChild(moveableNode)
 
-        let hint = SKLabelNode(fontNamed: "Helvetica-Bold")
         hint.text = "Swipe to explore levels".localized()
-        hint.fontSize = 24
+        hint.fontSize = 18
         hint.fontColor = .white
-        hint.position = CGPoint(x: frame.midX, y: frame.maxY - 44)
         hint.zPosition = 100
         addChild(hint)
+
+        let button = SKShapeNode(rectOf: CGSize(width: 112, height: 44), cornerRadius: 22)
+        button.fillColor = SKColor(red: 0.10, green: 0.31, blue: 0.19, alpha: 0.95)
+        button.strokeColor = SKColor(red: 0.72, green: 0.88, blue: 0.48, alpha: 1)
+        button.lineWidth = 2
+        button.zPosition = 101
+        let buttonLabel = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
+        buttonLabel.text = "More Apps".localized()
+        buttonLabel.fontSize = 15
+        buttonLabel.fontColor = .white
+        buttonLabel.verticalAlignmentMode = .center
+        button.addChild(buttonLabel)
+        addChild(button)
+        moreAppsButton = button
+        layoutUI()
 
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         pan.cancelsTouchesInView = false
@@ -142,6 +155,19 @@ class MenuScene: SKScene {
         if let panGesture { view.removeGestureRecognizer(panGesture) }
     }
 
+    func layoutUI() {
+        guard let view, let moreAppsButton else { return }
+        let origin = convertPoint(fromView: .zero)
+        let pointScale = abs(convertPoint(fromView: CGPoint(x: 1, y: 0)).x - origin.x)
+        let safe = view.safeAreaInsets
+        let top = convertPoint(fromView: CGPoint(x: 0, y: safe.top + 31)).y
+        let right = convertPoint(fromView: CGPoint(x: view.bounds.width - safe.right - 16, y: 0)).x
+        hint.fontSize = 18 * pointScale
+        hint.position = CGPoint(x: frame.midX, y: top - 8 * pointScale)
+        moreAppsButton.setScale(pointScale)
+        moreAppsButton.position = CGPoint(x: right - 56 * pointScale, y: top)
+    }
+
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         guard !levelPoints.isEmpty, let view = self.view else { return }
         let translation = gesture.translation(in: view)
@@ -162,18 +188,26 @@ class MenuScene: SKScene {
         defer { touchStartLocation = nil }
         guard let start = touchStartLocation,
               hypot(touchLocation.x - start.x, touchLocation.y - start.y) < 20 else { return }
-        let nodesAtPoint = nodes(at: touchLocation)
+        if moreAppsButton?.calculateAccumulatedFrame().contains(touchLocation) == true {
+            view?.window?.rootViewController?.present(MoreAppsViewController(), animated: true)
+            return
+        }
 
-        for node in nodesAtPoint {
-            if let nodeName = node.name, nodeName.contains("level") {
-                guard let level = Int(nodeName.split(separator: "_")[1]), level <= bestLevel else { return }
-                if let scene = GameScene.level(levelNum: level) {
-                    // Set the scale mode to scale to fit the window
-                    scene.scaleMode = .aspectFill
-                    // Present the scene
-                    view?.presentScene(scene, transition: .doorway(withDuration: 1.0))
-                }
-            }
+        let touchInMap = convert(touchLocation, to: moveableNode)
+        guard let index = levelPoints.firstIndex(where: {
+            hypot(touchInMap.x - $0.x, touchInMap.y - $0.y) < 80
+        }) else { return }
+        let level = index + 1
+        if level > bestLevel {
+            hint.removeAllActions()
+            hint.text = "Finish earlier levels to unlock".localized()
+            hint.run(.sequence([.wait(forDuration: 1.8), .run { [weak self] in
+                self?.hint.text = "Swipe to explore levels".localized()
+            }]))
+            return
+        }
+        if let scene = GameScene.level(levelNum: level) {
+            view?.presentScene(scene, transition: .fade(withDuration: 0.3))
         }
     }
 }
