@@ -7,17 +7,14 @@
 //
 
 import GameplayKit
-#if !targetEnvironment(macCatalyst)
-    import GoogleMobileAds
-#endif
-import Localize_Swift
 import SpriteKit
-
-import SwiftySKScrollView
+import UIKit
 
 class MenuScene: SKScene {
-    var scrollView: SwiftySKScrollView!
     let moveableNode = SKNode()
+    private var levelPoints = [CGPoint]()
+    private var panGesture: UIPanGestureRecognizer?
+    private var touchStartLocation: CGPoint?
 
     override func didMove(to view: SKView) {
         SKTAudio.sharedInstance().playBackgroundMusic("oboarding.mp3")
@@ -26,21 +23,30 @@ class MenuScene: SKScene {
 
         addChild(moveableNode)
 
-        scrollView = SwiftySKScrollView(frame: CGRect(x: 0, y: 0, width: size.width, height: size.height), moveableNode: moveableNode, direction: .vertical)
-        scrollView.contentSize = CGSize(width: scrollView!.frame.width, height: scrollView!.frame.height * 2.0) // makes it 3 times the height
-        view.addSubview(scrollView)
+        let hint = SKLabelNode(fontNamed: "Helvetica-Bold")
+        hint.text = "Swipe to explore levels".localized()
+        hint.fontSize = 24
+        hint.fontColor = .white
+        hint.position = CGPoint(x: frame.midX, y: frame.maxY - 44)
+        hint.zPosition = 100
+        addChild(hint)
+
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        pan.cancelsTouchesInView = false
+        view.addGestureRecognizer(pan)
+        panGesture = pan
 
         let levelTree = SKSpriteNode(imageNamed: "level_tree")
         levelTree.anchorPoint = CGPoint(x: 0.5, y: 0)
         levelTree.zPosition = 2
-        levelTree.position = CGPoint(x: 0, y: -scrollView!.frame.height * 2.0)
+        levelTree.position = CGPoint(x: 0, y: -size.height * 2.0)
         moveableNode.addChild(levelTree)
 
         var levelNodePoints = [CGPoint]()
 
         for i in 1 ... Constants.totalLevel {
             let x: CGFloat = i % 2 == 1 ? 200 : -160
-            let y: CGFloat = -scrollView!.frame.height * 2.0 + CGFloat(1100 + i * 200)
+            let y: CGFloat = -size.height * 2.0 + CGFloat(1100 + i * 200)
             levelNodePoints.append(CGPoint(x: x, y: y))
         }
 
@@ -71,7 +77,7 @@ class MenuScene: SKScene {
         levelCurrent.position = levelNodePoints[bestLevel - 1]
         if bestLevel % 2 == 0 {
             levelCurrent.xScale = levelCurrent.xScale * -1
-            levelCurrent.run(
+            if !UIAccessibility.isReduceMotionEnabled { levelCurrent.run(
                 SKAction.repeatForever(
                     SKAction.sequence(
                         [SKAction.group(
@@ -82,15 +88,15 @@ class MenuScene: SKScene {
                              SKAction.scaleX(to: -0.95, duration: 0.5)])]
                     )
                 )
-            )
+            ) }
         } else {
-            levelCurrent.run(
+            if !UIAccessibility.isReduceMotionEnabled { levelCurrent.run(
                 SKAction.repeatForever(
                     SKAction.sequence(
                         [SKAction.scale(to: 1.05, duration: 0.5),
                          SKAction.scale(to: 0.95, duration: 0.5)])
                 )
-            )
+            ) }
         }
 
         levelCurrent.name = "level_\(bestLevel)"
@@ -114,6 +120,7 @@ class MenuScene: SKScene {
                     level.xScale = level.xScale * -1
                 }
                 level.name = "level_\(i)"
+                level.alpha = 0.55
                 moveableNode.addChild(level)
                 let labelNode = SKLabelNode(fontNamed: "Helvetica-Bold")
                 labelNode.text = "\(i)"
@@ -127,14 +134,34 @@ class MenuScene: SKScene {
             }
         }
 
-        scrollView.contentOffset.y = scrollView!.frame.height * 1.0 - CGFloat((bestLevel - 1) * 200) + 200
+        levelPoints = levelNodePoints
+        moveableNode.position.y = frame.midY - levelNodePoints[bestLevel - 1].y
+    }
 
-        print("scrollView.contentOffset.y: \(scrollView.contentOffset.y)")
+    override func willMove(from view: SKView) {
+        if let panGesture { view.removeGestureRecognizer(panGesture) }
+    }
+
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        guard !levelPoints.isEmpty, let view = self.view else { return }
+        let translation = gesture.translation(in: view)
+        let scale = size.height / view.bounds.height
+        let minY = frame.midY - levelPoints[Constants.totalLevel - 1].y
+        let maxY = frame.midY - levelPoints[0].y
+        moveableNode.position.y = min(max(moveableNode.position.y + translation.y * scale, minY), maxY)
+        gesture.setTranslation(.zero, in: view)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touchStartLocation = touches.first?.location(in: self)
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
+        defer { touchStartLocation = nil }
+        guard let start = touchStartLocation,
+              hypot(touchLocation.x - start.x, touchLocation.y - start.y) < 20 else { return }
         let nodesAtPoint = nodes(at: touchLocation)
 
         for node in nodesAtPoint {
@@ -144,8 +171,6 @@ class MenuScene: SKScene {
                     // Set the scale mode to scale to fit the window
                     scene.scaleMode = .aspectFill
                     // Present the scene
-                    scrollView.removeFromSuperview()
-                    scrollView = nil // nil out reference to deallocate properly
                     view?.presentScene(scene, transition: .doorway(withDuration: 1.0))
                 }
             }

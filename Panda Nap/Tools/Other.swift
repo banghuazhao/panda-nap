@@ -9,6 +9,24 @@
 import Foundation
 import CoreGraphics
 
+extension String {
+    func localized() -> String {
+        NSLocalizedString(self, comment: "")
+    }
+}
+
+protocol Configurable: AnyObject {}
+
+extension Configurable {
+    @discardableResult
+    func then(_ configure: (Self) -> Void) -> Self {
+        configure(self)
+        return self
+    }
+}
+
+extension NSObject: Configurable {}
+
 public func delay(seconds: TimeInterval, completion: @escaping () -> Void) {
     DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: completion)
 }

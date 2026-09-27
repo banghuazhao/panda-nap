@@ -10,9 +10,7 @@ import GameplayKit
 #if !targetEnvironment(macCatalyst)
     import GoogleMobileAds
 #endif
-import Localize_Swift
 import SpriteKit
-import Then
 
 struct PhysicsCategory {
     static let None: UInt32 = 0
@@ -34,6 +32,9 @@ protocol InteractiveNode {
 var loseTime = 0
 
 class GameScene: SKScene {
+    #if !targetEnvironment(macCatalyst)
+    private var interstitialAd: InterstitialAd?
+    #endif
     let menuNode = SKSpriteNode(imageNamed: "menu").then { node in
         node.name = "menu"
         node.zPosition = 100
@@ -73,8 +74,14 @@ class GameScene: SKScene {
         }
         })
 
-        bedNode = childNode(withName: "bed") as! BedNode
-        pandaNode = childNode(withName: "panda") as! PandaNode
+        guard let bed = childNode(withName: "bed") as? BedNode,
+              let panda = childNode(withName: "panda") as? PandaNode else {
+            playable = false
+            assertionFailure("Level scene is missing its bed or panda node")
+            return
+        }
+        bedNode = bed
+        pandaNode = panda
 
         SKTAudio.sharedInstance().playBackgroundMusic("background.mp3")
 
@@ -95,6 +102,16 @@ class GameScene: SKScene {
         moreAppsLabel.position = CGPoint(
             x: 0, y: 0)
         moreAppsNode.addChild(moreAppsLabel)
+
+        #if !targetEnvironment(macCatalyst)
+        if loseTime == 1 {
+            InterstitialAd.load(with: Constants.interstitialAdID, request: Request()) { [weak self] ad, error in
+                if let error { print("Failed to load interstitial: \(error.localizedDescription)") }
+                self?.interstitialAd = ad
+                ad?.fullScreenContentDelegate = self
+            }
+        }
+        #endif
     }
 
     override func update(_ currentTime: TimeInterval) {
@@ -138,8 +155,9 @@ class GameScene: SKScene {
     }
 
     func newGame() {
-        weak var _self = self
-        _self?.view!.presentScene(GameScene.level(levelNum: currentLevel))
+        if let nextScene = GameScene.level(levelNum: currentLevel) {
+            view?.presentScene(nextScene)
+        }
     }
 
     func lose() {
@@ -157,27 +175,21 @@ class GameScene: SKScene {
             run(SKAction.afterDelay(3, runBlock: newGame))
         } else {
             #if !targetEnvironment(macCatalyst)
-                GADInterstitialAd.load(withAdUnitID: Constants.interstitialAdID, request: GADRequest()) { ad, error in
-                    if let error = error {
-                        print("Failed to load interstitial ad with error: \(error.localizedDescription)")
-                        return
-                    }
-                    if let ad = ad {
-                        if let rootViewController = self.view?.window?.rootViewController {
-                            ad.present(fromRootViewController: rootViewController)
-                        }
-
+                run(SKAction.afterDelay(2, runBlock: { [weak self] in
+                    guard let self else { return }
+                    if let ad = self.interstitialAd,
+                       let controller = self.view?.window?.rootViewController {
+                        ad.present(from: controller)
                     } else {
-                        print("interstitial Ad wasn't ready")
+                        self.newGame()
                     }
-                }
+                }))
             #else
                 let moreAppsViewController = MoreAppsViewController()
                 if let rootViewController = view?.window?.rootViewController { rootViewController.present(moreAppsViewController, animated: true)
                 }
             #endif
             loseTime = 0
-            run(SKAction.afterDelay(3, runBlock: newGame))
         }
     }
 
@@ -196,7 +208,7 @@ class GameScene: SKScene {
     }
 
     class func level(levelNum: Int) -> GameScene? {
-        let scene = GameScene(fileNamed: "Level\(levelNum)")!
+        guard let scene = GameScene(fileNamed: "Level\(levelNum)") else { return nil }
         scene.currentLevel = levelNum
         if levelNum > bestLevel {
             bestLevel = levelNum
@@ -206,6 +218,20 @@ class GameScene: SKScene {
         return scene
     }
 }
+
+#if !targetEnvironment(macCatalyst)
+extension GameScene: FullScreenContentDelegate {
+    func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
+        interstitialAd = nil
+        newGame()
+    }
+
+    func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        interstitialAd = nil
+        newGame()
+    }
+}
+#endif
 
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {

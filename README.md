@@ -2,7 +2,7 @@
 
 A delightful iOS puzzle game where you help a sleepy panda reach her bed by removing obstacles. Be careful not to wake her up!
 
-[![iOS](https://img.shields.io/badge/iOS-11.0+-blue.svg)](https://developer.apple.com/ios/)
+[![iOS](https://img.shields.io/badge/iOS-13.0+-blue.svg)](https://developer.apple.com/ios/)
 [![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org/)
 [![SpriteKit](https://img.shields.io/badge/SpriteKit-Game%20Engine-green.svg)](https://developer.apple.com/spritekit/)
 [![App Store](https://img.shields.io/badge/App%20Store-Download-blue.svg)](https://apps.apple.com/us/app/panda-nap-panda-games/id1519636895)
@@ -45,16 +45,13 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 ### Built With
 - **SpriteKit**: Apple's 2D game framework for physics and rendering
 - **Swift**: Modern iOS development language
-- **CocoaPods**: Dependency management
+- **Swift Package Manager**: Dependency management in the Xcode project
 - **Google Mobile Ads**: Monetization through banner and interstitial ads
 
 ### Dependencies
-- `Localize-Swift`: Internationalization support
-- `SwiftyButton`: Custom button implementations
-- `SnapKit`: Auto Layout DSL
-- `Then`: Object initialization utilities
-- `Google-Mobile-Ads-SDK`: Ad integration
-- `SwiftySKScrollView`: Scroll view for SpriteKit
+- `GoogleMobileAds` 13.10.0 (Swift Package Manager): Banner and interstitial ads
+
+Localization, Auto Layout, menu scrolling, and view configuration now use first-party APIs.
 
 ### Architecture
 - **MVC Pattern**: Model-View-Controller architecture
@@ -64,17 +61,16 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 
 ## 📱 Requirements
 
-- **iOS**: 11.0 or later
+- **iOS**: 13.0 or later
 - **Devices**: iPhone and iPad (Universal app)
 - **Orientation**: Landscape mode only
-- **Xcode**: 12.0 or later (for development)
+- **Xcode**: 16.0 or later (for development)
 
 ## 🚀 Installation & Setup
 
 ### Prerequisites
-- Xcode 12.0 or later
-- iOS 11.0+ deployment target
-- CocoaPods installed
+- Xcode 16.0 or later
+- iOS 13.0+ deployment target
 
 ### Setup Instructions
 
@@ -84,21 +80,18 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
    cd panda-nap
    ```
 
-2. **Install dependencies**
+2. **Open the project**
    ```bash
-   pod install
+   open "Panda Nap.xcodeproj"
    ```
+   Xcode resolves Google Mobile Ads automatically through Swift Package Manager.
 
-3. **Open the workspace**
-   ```bash
-   open "Panda Nap.xcworkspace"
-   ```
+3. **Configure Ad IDs** (for distribution)
+   - Debug and local Release builds use Google's test ad IDs.
+   - Add your app ID and ad unit IDs to the ignored `Panda Nap/Config/Release.xcconfig` for App Store builds. `Production.xcconfig` includes that local file when present.
+   - Review the `SKAdNetworkItems` in `Info.plist` whenever Google updates its [privacy strategy](https://developers.google.com/admob/ios/privacy/strategies).
 
-4. **Configure Ad IDs** (Optional)
-   - Update `Constants.swift` with your Google AdMob IDs
-   - Configure ad unit IDs in the project settings
-
-5. **Build and run**
+4. **Build and run**
    - Select your target device or simulator
    - Press `Cmd + R` to build and run
 

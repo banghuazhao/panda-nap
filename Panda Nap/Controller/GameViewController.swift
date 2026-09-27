@@ -15,7 +15,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let view = self.view as! SKView? {
+        if let view = self.view as? SKView {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "MenuScene") {
                 // Set the scale mode to scale to fit the window
@@ -38,9 +38,9 @@ class GameViewController: UIViewController {
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
+            return .landscape
         } else {
-            return .all
+            return .landscape
         }
     }
 

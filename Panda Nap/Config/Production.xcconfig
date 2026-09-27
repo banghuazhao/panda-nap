@@ -1,0 +1,4 @@
+// Test ad IDs are the safe default for local release builds.
+// Add production values in the ignored Release.xcconfig before App Store submission.
+#include "Debug.xcconfig"
+#include? "Release.xcconfig"

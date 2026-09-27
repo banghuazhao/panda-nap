@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         #if !targetEnvironment(macCatalyst)
-            GADMobileAds.sharedInstance().start(completionHandler: nil)
+            MobileAds.shared.start()
         #else
             UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.forEach { windowScene in
                 windowScene.sizeRestrictions?.maximumSize = CGSize(width: 1280, height: 720)
@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
 
         if let previousBestLevel = UserDefaults.standard.value(forKey: Constants.UserDefaultsKeys.BEST_LEVEL) as? Int {
-            bestLevel = previousBestLevel
+            bestLevel = min(max(previousBestLevel, 1), Constants.totalLevel)
             print("bestLevel: \(bestLevel)")
         } else {
             UserDefaults.standard.set(1, forKey: Constants.UserDefaultsKeys.BEST_LEVEL)

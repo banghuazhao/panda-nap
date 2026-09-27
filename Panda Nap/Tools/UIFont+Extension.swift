@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIFont {
-    static let bigTitle = UIFont.boldSystemFont(ofSize: 20)
-    static let title = UIFont.boldSystemFont(ofSize: 17)
-    static let normal = UIFont.systemFont(ofSize: 15)
+    static let bigTitle = UIFont.preferredFont(forTextStyle: .title2)
+    static let title = UIFont.preferredFont(forTextStyle: .headline)
+    static let normal = UIFont.preferredFont(forTextStyle: .subheadline)
 }

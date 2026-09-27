@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 #if !targetEnvironment(macCatalyst)
     import GoogleMobileAds
 #endif
@@ -16,11 +15,11 @@ class MoreAppsViewController: UIViewController {
     var isAds: Bool = false
 
     #if !targetEnvironment(macCatalyst)
-        lazy var bannerView: GADBannerView = {
-            let bannerView = GADBannerView()
+        lazy var bannerView: BannerView = {
+            let bannerView = BannerView(adSize: AdSizeBanner)
             bannerView.adUnitID = Constants.bannerAdUnitID
             bannerView.rootViewController = self
-            bannerView.load(GADRequest())
+            bannerView.load(Request())
             return bannerView
         }()
 
@@ -29,92 +28,92 @@ class MoreAppsViewController: UIViewController {
                 title: "Relaxing Up".localized(),
                 detail: "Meditation,Healing".localized(),
                 icon: UIImage(named: "relaxing_up"),
-                url: URL(string: "http://itunes.apple.com/app/id1618712178")),
+                url: URL(string: "https://apps.apple.com/app/id1618712178")),
            AppItem(
                 title: "Solitaire Guru".localized(),
                 detail: "klondike & solitaire".localized(),
                 icon: UIImage(named: "solitaire_guru"),
-                url: URL(string: "http://itunes.apple.com/app/id1636116344")),
+                url: URL(string: "https://apps.apple.com/app/id1636116344")),
             AppItem(
                 title: "Saving Ambulance!Sliding Block".localized(),
                 detail: "Sliding Puzzle With Cars".localized(),
                 icon: UIImage(named: "saving_ambulance"),
-                url: URL(string: "http://itunes.apple.com/app/id1639693525")),
+                url: URL(string: "https://apps.apple.com/app/id1639693525")),
             AppItem(
                 title: "Sudoku Lover".localized(),
                 detail: "Sudoku Lover".localized(),
                 icon: UIImage(named: "sudoku_lover"),
-                url: URL(string: "http://itunes.apple.com/app/id1620749798")),
+                url: URL(string: "https://apps.apple.com/app/id1620749798")),
             AppItem(
                 title: "Yes Habit".localized(),
                 detail: "Habit Tracker".localized(),
                 icon: UIImage(named: "yes_habit"),
-                url: URL(string: "http://itunes.apple.com/app/id1637643734")),
+                url: URL(string: "https://apps.apple.com/app/id1637643734")),
             AppItem(
                 title: "Falling Block Puzzle".localized(),
                 detail: "Arcade Game&Brick Game".localized(),
                 icon: UIImage(named: "falling_block_puzzle"),
-                url: URL(string: "http://itunes.apple.com/app/id1609440799")),
+                url: URL(string: "https://apps.apple.com/app/id1609440799")),
             AppItem(
                 title: "Fling Knife".localized(),
                 detail: "Knife games".localized(),
                 icon: UIImage(named: "fling_knife"),
-                url: URL(string: "http://itunes.apple.com/app/id1636426217")),
+                url: URL(string: "https://apps.apple.com/app/id1636426217")),
             AppItem(
                 title: "Instant Face".localized(),
                 detail: "Avatar Maker".localized(),
                 icon: UIImage(named: "instant_face"),
-                url: URL(string: "http://itunes.apple.com/app/id1638563222")),
+                url: URL(string: "https://apps.apple.com/app/id1638563222")),
             AppItem(
                 title: "Minesweeper Z".localized(),
                 detail: "Minesweeper App".localized(),
                 icon: UIImage(named: "minesweeper_go"),
-                url: URL(string: "http://itunes.apple.com/app/id1621899572")),
+                url: URL(string: "https://apps.apple.com/app/id1621899572")),
             AppItem(
                 title: "We Play Piano".localized(),
                 detail: "Piano Keyboard".localized(),
                 icon: UIImage(named: "we_play_piano"),
-                url: URL(string: "http://itunes.apple.com/app/id1625018611")),
+                url: URL(string: "https://apps.apple.com/app/id1625018611")),
             AppItem(
                 title: "Memory Games".localized(),
                 detail: "Match Pairs Card".localized(),
                 icon: UIImage(named: "classic_memory_game"),
-                url: URL(string: "http://itunes.apple.com/app/id1617593078")),
+                url: URL(string: "https://apps.apple.com/app/id1617593078")),
             AppItem(
                 title: "Image Guru".localized(),
                 detail: "Photo Editor,Filter".localized(),
                 icon: UIImage(named: "image_guru"),
-                url: URL(string: "http://itunes.apple.com/app/id1625021625")),
+                url: URL(string: "https://apps.apple.com/app/id1625021625")),
             AppItem(
                 title: "Metronome Go".localized(),
                 detail: "tempo,bpm-counter".localized(),
                 icon: UIImage(named: "metronome_go"),
-                url: URL(string: "http://itunes.apple.com/app/id1635462172")),
+                url: URL(string: "https://apps.apple.com/app/id1635462172")),
             AppItem(
                 title: "Finance Go".localized(),
                 detail: "Financial Reports & Investing".localized(),
                 icon: UIImage(named: "appIcon_financeGo"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.financeGoAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.financeGoAppID)")),
             AppItem(
                 title: "Financial Ratios Go".localized(),
                 detail: "Finance, Ratios, Investing".localized(),
                 icon: UIImage(named: "appIcon_financialRatiosGo"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.financialRatiosGoAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.financialRatiosGoAppID)")),
             AppItem(
                 title: "Money Tracker".localized(),
                 detail: "Budget, Expense & Bill Planner".localized(),
                 icon: UIImage(named: "appIcon_moneyTracker"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.moneyTrackerAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.moneyTrackerAppID)")),
             AppItem(
                 title: "BMI Diary".localized(),
                 detail: "Fitness, Weight Loss &Health".localized(),
                 icon: UIImage(named: "appIcon_bmiDiary"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.BMIDiaryAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.BMIDiaryAppID)")),
             AppItem(
                 title: "Novels Hub".localized(),
                 detail: "Fiction eBooks Library!".localized(),
                 icon: UIImage(named: "appIcon_novels_Hub"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.novelsHubAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.novelsHubAppID)")),
             AppItem(
                 title: "More Apps".localized(),
                 detail: "Check out more Apps made by us".localized(),
@@ -127,27 +126,27 @@ class MoreAppsViewController: UIViewController {
                 title: "Finance Go".localized(),
                 detail: "Financial Reports & Investing".localized(),
                 icon: UIImage(named: "appIcon_financeGo"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.financeGoAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.financeGoAppID)")),
             AppItem(
                 title: "Ratios Go".localized(),
                 detail: "Finance, Ratios, Investing".localized(),
                 icon: UIImage(named: "appIcon_financialRatiosGo"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.finanicalRatiosGoMacOSAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.finanicalRatiosGoMacOSAppID)")),
             AppItem(
                 title: "Money Tracker".localized(),
                 detail: "Budget, Expense & Bill Planner".localized(),
                 icon: UIImage(named: "appIcon_moneyTracker"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.moneyTrackerAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.moneyTrackerAppID)")),
             AppItem(
                 title: "BMI Diary".localized(),
                 detail: "Fitness, Weight Loss &Health".localized(),
                 icon: UIImage(named: "appIcon_bmiDiary"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.BMIDiaryAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.BMIDiaryAppID)")),
             AppItem(
                 title: "Novels Hub".localized(),
                 detail: "Fiction eBooks Library!".localized(),
                 icon: UIImage(named: "appIcon_novels_Hub"),
-                url: URL(string: "http://itunes.apple.com/app/id\(Constants.novelsHubAppID)")),
+                url: URL(string: "https://apps.apple.com/app/id\(Constants.novelsHubAppID)")),
             AppItem(
                 title: "More Apps".localized(),
                 detail: "Check out more Apps made by us".localized(),
@@ -157,13 +156,16 @@ class MoreAppsViewController: UIViewController {
     #endif
 
     lazy var backButton = UIButton(type: .custom).then { b in
-        b.setImage(UIImage(named: "back_black"), for: .normal)
+        b.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        b.tintColor = .label
+        b.accessibilityLabel = "Back".localized()
         b.addTarget(self, action: #selector(backToHome), for: .touchUpInside)
     }
 
     lazy var titleLabel = UILabel().then { label in
         label.font = UIFont.bigTitle
-        label.textColor = .black
+        label.textColor = .label
+        label.adjustsFontForContentSizeCategory = true
         if isAds {
             label.text = "More Apps (Ads)".localized()
         } else {
@@ -173,45 +175,54 @@ class MoreAppsViewController: UIViewController {
 
     lazy var tableView = UITableView().then { tv in
         tv.backgroundColor = .clear
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 82
         tv.delegate = self
         tv.dataSource = self
         tv.register(AppItemCell.self, forCellReuseIdentifier: "AppItemCell")
         tv.register(MoreAppsHeaderCell.self, forCellReuseIdentifier: "MoreAppsHeaderCell")
 
         tv.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        tv.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 80))
+        tv.tableFooterView = UIView()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "bg_2048x1536")!)
+        view.backgroundColor = .systemBackground
         view.addSubview(backButton)
         view.addSubview(titleLabel)
         view.addSubview(tableView)
 
         #if !targetEnvironment(macCatalyst)
             view.addSubview(bannerView)
-            bannerView.snp.makeConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide)
-                make.left.right.equalToSuperview()
-                make.height.equalTo(50)
-            }
+            bannerView.translatesAutoresizingMaskIntoConstraints = false
         #endif
 
-        backButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(20)
-            make.centerY.equalTo(titleLabel)
-            make.size.equalTo(20)
-        }
-        titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-        }
-        tableView.snp.makeConstraints { make in
-            make.bottom.left.right.equalToSuperview()
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
-        }
+        [backButton, titleLabel, tableView].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        var constraints = [
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            backButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            titleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: backButton.trailingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ]
+        #if !targetEnvironment(macCatalyst)
+            constraints += [
+                bannerView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+                bannerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                tableView.bottomAnchor.constraint(equalTo: bannerView.topAnchor, constant: -8)
+            ]
+        #else
+            constraints.append(tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor))
+        #endif
+        NSLayoutConstraint.activate(constraints)
     }
 }
 
@@ -227,21 +238,7 @@ extension MoreAppsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isAds {
-            if section == 0 {
-                return 1
-            } else if section == 1 {
-                return 1
-            } else {
-                return appItems.count
-            }
-        } else {
-            if section == 0 {
-                return 1
-            } else {
-                return appItems.count
-            }
-        }
+        return section == 0 ? 1 : appItems.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -259,6 +256,7 @@ extension MoreAppsViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             return
         } else {
+            tableView.deselectRow(at: indexPath, animated: true)
             let appItem = appItems[indexPath.row]
             if let url = appItem.url, UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)

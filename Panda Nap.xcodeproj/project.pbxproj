@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A10000000000000000000001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, ); productRef = A10000000000000000000002 /* GoogleMobileAds */; };
 		995D076024A62B6A00C2C115 /* oboarding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 995D075F24A62B6A00C2C115 /* oboarding.mp3 */; };
 		995D076224A6375800C2C115 /* Level2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 995D076124A6375200C2C115 /* Level2.sks */; };
 		995D076524A6382900C2C115 /* Level7.sks in Resources */ = {isa = PBXBuildFile; fileRef = 995D076424A6381F00C2C115 /* Level7.sks */; };
@@ -61,12 +62,9 @@
 		9971C8B625FA59F2008CFCF9 /* AppItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8AF25FA5972008CFCF9 /* AppItemCell.swift */; };
 		9971C8B925FA59FF008CFCF9 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8B825FA59FF008CFCF9 /* UIFont+Extension.swift */; };
 		9971C8BC25FA5A0D008CFCF9 /* UIButtonLargerArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8BB25FA5A0C008CFCF9 /* UIButtonLargerArea.swift */; };
-		FCFD87EA7D3A9F6656E9F09C /* Pods_Panda_Nap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D580B4920108B723E159C62D /* Pods_Panda_Nap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		24480902045A4448415C64AB /* Pods-Panda Nap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Panda Nap.release.xcconfig"; path = "Target Support Files/Pods-Panda Nap/Pods-Panda Nap.release.xcconfig"; sourceTree = "<group>"; };
-		86A10A9B155F3025DF3E661F /* Pods-Panda Nap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Panda Nap.debug.xcconfig"; path = "Target Support Files/Pods-Panda Nap/Pods-Panda Nap.debug.xcconfig"; sourceTree = "<group>"; };
 		995D075F24A62B6A00C2C115 /* oboarding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = oboarding.mp3; sourceTree = "<group>"; };
 		995D076124A6375200C2C115 /* Level2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2.sks; sourceTree = "<group>"; };
 		995D076324A637C700C2C115 /* Level4.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level4.sks; sourceTree = "<group>"; };
@@ -128,7 +126,6 @@
 		9971C8B825FA59FF008CFCF9 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		9971C8BB25FA5A0C008CFCF9 /* UIButtonLargerArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonLargerArea.swift; sourceTree = "<group>"; };
 		9971C8D925FA6115008CFCF9 /* Panda Nap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Panda Nap.entitlements"; sourceTree = "<group>"; };
-		D580B4920108B723E159C62D /* Pods_Panda_Nap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Panda_Nap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -140,37 +137,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FCFD87EA7D3A9F6656E9F09C /* Pods_Panda_Nap.framework in Frameworks */,
+				A10000000000000000000001 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		53C2DEE8A66E193F18FA19B2 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				86A10A9B155F3025DF3E661F /* Pods-Panda Nap.debug.xcconfig */,
-				24480902045A4448415C64AB /* Pods-Panda Nap.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		8C00EAD7E0523EA34D223BD2 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				D580B4920108B723E159C62D /* Pods_Panda_Nap.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		9963D906249EF24700033FBD = {
 			isa = PBXGroup;
 			children = (
 				9963D911249EF24800033FBD /* Panda Nap */,
 				9963D910249EF24800033FBD /* Products */,
-				53C2DEE8A66E193F18FA19B2 /* Pods */,
-				8C00EAD7E0523EA34D223BD2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -309,11 +287,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9963D927249EF24A00033FBD /* Build configuration list for PBXNativeTarget "Panda Nap" */;
 			buildPhases = (
-				75D4C751AF7A2C6858058D9C /* [CP] Check Pods Manifest.lock */,
 				9963D90B249EF24700033FBD /* Sources */,
 				9963D90C249EF24700033FBD /* Frameworks */,
 				9963D90D249EF24700033FBD /* Resources */,
-				B9872A213D329D811050F64B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -324,6 +300,9 @@
 			);
 			name = "Panda Nap";
 			productName = "Panda Nap";
+			packageProductDependencies = (
+				A10000000000000000000002 /* GoogleMobileAds */,
+			);
 			productReference = 9963D90F249EF24800033FBD /* Panda Nap.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -353,6 +332,9 @@
 				"zh-Hant",
 			);
 			mainGroup = 9963D906249EF24700033FBD;
+			packageReferences = (
+				A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			productRefGroup = 9963D910249EF24800033FBD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -394,47 +376,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		75D4C751AF7A2C6858058D9C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Panda Nap-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B9872A213D329D811050F64B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Panda Nap/Pods-Panda Nap-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Panda Nap/Pods-Panda Nap-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Panda Nap/Pods-Panda Nap-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9963D90B249EF24700033FBD /* Sources */ = {
@@ -517,6 +458,22 @@
 		};
 /* End PBXVariantGroup section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+        A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+            isa = XCRemoteSwiftPackageReference;
+            repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+            requirement = { kind = upToNextMajorVersion; minimumVersion = 13.10.0; };
+        };
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+        A10000000000000000000002 /* GoogleMobileAds */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+            productName = GoogleMobileAds;
+        };
+/* End XCSwiftPackageProductDependency section */
+
 /* Begin XCBuildConfiguration section */
 		9963D925249EF24A00033FBD /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -571,7 +528,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -584,7 +541,7 @@
 		9963D926249EF24A00033FBD /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = 994D48252E18CFAB00DB5AC4 /* Config */;
-			baseConfigurationReferenceRelativePath = Release.xcconfig;
+			baseConfigurationReferenceRelativePath = Production.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -628,7 +585,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -640,89 +597,20 @@
 		};
 		9963D928249EF24A00033FBD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 86A10A9B155F3025DF3E661F /* Pods-Panda Nap.debug.xcconfig */;
-			buildSettings = {
+						buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.1.60;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1.6;
-				"OTHER_LDFLAGS[sdk=iphone*]" = (
-					"$(inherited)",
-					"-l\"c++\"",
-					"-l\"sqlite3\"",
-					"-l\"z\"",
-					"-framework",
-					"\"AVFoundation\"",
-					"-framework",
-					"\"AudioToolbox\"",
-					"-framework",
-					"\"CFNetwork\"",
-					"-framework",
-					"\"CoreGraphics\"",
-					"-framework",
-					"\"CoreMedia\"",
-					"-framework",
-					"\"CoreTelephony\"",
-					"-framework",
-					"\"CoreVideo\"",
-					"-framework",
-					"\"FBLPromises\"",
-					"-framework",
-					"\"GoogleAppMeasurement\"",
-					"-framework",
-					"\"GoogleMobileAds\"",
-					"-framework",
-					"\"GoogleUtilities\"",
-					"-framework",
-					"\"Localize_Swift\"",
-					"-framework",
-					"\"MediaPlayer\"",
-					"-framework",
-					"\"MessageUI\"",
-					"-framework",
-					"\"MobileCoreServices\"",
-					"-framework",
-					"\"QuartzCore\"",
-					"-framework",
-					"\"Security\"",
-					"-framework",
-					"\"SnapKit\"",
-					"-framework",
-					"\"StoreKit\"",
-					"-framework",
-					"\"SwiftyButton\"",
-					"-framework",
-					"\"SwiftySKScrollView\"",
-					"-framework",
-					"\"SystemConfiguration\"",
-					"-framework",
-					"\"Then\"",
-					"-framework",
-					"\"UIKit\"",
-					"-framework",
-					"\"UserMessagingPlatform\"",
-					"-framework",
-					"\"WebKit\"",
-					"-framework",
-					"\"nanopb\"",
-					"-weak_framework",
-					"\"AdSupport\"",
-					"-weak_framework",
-					"\"JavaScriptCore\"",
-					"-weak_framework",
-					"\"SafariServices\"",
-					"-weak_framework",
-					"\"WebKit\"",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = ("$(inherited)", "-ObjC");
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Banghua-Zhao.Panda-Nap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
@@ -733,89 +621,20 @@
 		};
 		9963D929249EF24A00033FBD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 24480902045A4448415C64AB /* Pods-Panda Nap.release.xcconfig */;
-			buildSettings = {
+						buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.1.60;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1.6;
-				"OTHER_LDFLAGS[sdk=iphone*]" = (
-					"$(inherited)",
-					"-l\"c++\"",
-					"-l\"sqlite3\"",
-					"-l\"z\"",
-					"-framework",
-					"\"AVFoundation\"",
-					"-framework",
-					"\"AudioToolbox\"",
-					"-framework",
-					"\"CFNetwork\"",
-					"-framework",
-					"\"CoreGraphics\"",
-					"-framework",
-					"\"CoreMedia\"",
-					"-framework",
-					"\"CoreTelephony\"",
-					"-framework",
-					"\"CoreVideo\"",
-					"-framework",
-					"\"FBLPromises\"",
-					"-framework",
-					"\"GoogleAppMeasurement\"",
-					"-framework",
-					"\"GoogleMobileAds\"",
-					"-framework",
-					"\"GoogleUtilities\"",
-					"-framework",
-					"\"Localize_Swift\"",
-					"-framework",
-					"\"MediaPlayer\"",
-					"-framework",
-					"\"MessageUI\"",
-					"-framework",
-					"\"MobileCoreServices\"",
-					"-framework",
-					"\"QuartzCore\"",
-					"-framework",
-					"\"Security\"",
-					"-framework",
-					"\"SnapKit\"",
-					"-framework",
-					"\"StoreKit\"",
-					"-framework",
-					"\"SwiftyButton\"",
-					"-framework",
-					"\"SwiftySKScrollView\"",
-					"-framework",
-					"\"SystemConfiguration\"",
-					"-framework",
-					"\"Then\"",
-					"-framework",
-					"\"UIKit\"",
-					"-framework",
-					"\"UserMessagingPlatform\"",
-					"-framework",
-					"\"WebKit\"",
-					"-framework",
-					"\"nanopb\"",
-					"-weak_framework",
-					"\"AdSupport\"",
-					"-weak_framework",
-					"\"JavaScriptCore\"",
-					"-weak_framework",
-					"\"SafariServices\"",
-					"-weak_framework",
-					"\"WebKit\"",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = ("$(inherited)", "-ObjC");
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Banghua-Zhao.Panda-Nap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;

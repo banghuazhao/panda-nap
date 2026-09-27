@@ -26,60 +26,61 @@ class AppItemCell: UITableViewCell {
     }
 
     lazy var titleLabel = UILabel().then { label in
-        label.adjustsFontSizeToFitWidth = true
-        label.numberOfLines = 1
+        label.adjustsFontForContentSizeCategory = true
+        label.numberOfLines = 2
         label.lineBreakMode = .byTruncatingTail
-        label.textColor = UIColor.black
+        label.textColor = .label
         label.font = UIFont.title
     }
 
     lazy var detailLabel = UILabel().then { label in
-        label.adjustsFontSizeToFitWidth = true
-        label.numberOfLines = 1
+        label.adjustsFontForContentSizeCategory = true
+        label.numberOfLines = 2
         label.lineBreakMode = .byTruncatingTail
-        label.textColor = UIColor.darkGray
+        label.textColor = .secondaryLabel
         label.font = UIFont.normal
     }
 
     lazy var rightArrowImageView = UIImageView().then { imageView in
-        imageView.tintColor = .black
+        imageView.tintColor = .tertiaryLabel
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "button_rightArrow")?.withRenderingMode(.alwaysTemplate)
+        imageView.image = UIImage(systemName: "chevron.right")
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
-        selectionStyle = .none
+        selectionStyle = .default
 
         contentView.addSubview(iconView)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(detailLabel)
         contentView.addSubview(rightArrowImageView)
 
-        iconView.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(20)
-            make.size.equalTo(50)
-            make.top.bottom.equalToSuperview().inset(16)
+        [iconView, titleLabel, detailLabel, rightArrowImageView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
         }
-
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(iconView).offset(2)
-            make.left.equalTo(iconView.snp.right).offset(12)
-            make.right.equalTo(rightArrowImageView.snp.left).offset(-12)
-        }
-
-        detailLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(iconView).offset(-2)
-            make.left.equalTo(iconView.snp.right).offset(12)
-            make.right.equalTo(rightArrowImageView.snp.left).offset(-12)
-        }
-
-        rightArrowImageView.snp.makeConstraints { make in
-            make.width.equalTo(12)
-            make.right.equalToSuperview().inset(20)
-            make.centerY.equalToSuperview()
-        }
+        let textStack = UIStackView(arrangedSubviews: [titleLabel, detailLabel])
+        textStack.axis = .vertical
+        textStack.spacing = 4
+        textStack.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(textStack)
+        NSLayoutConstraint.activate([
+            iconView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            iconView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 56),
+            iconView.heightAnchor.constraint(equalTo: iconView.widthAnchor),
+            iconView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 12),
+            iconView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -12),
+            textStack.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 14),
+            textStack.trailingAnchor.constraint(equalTo: rightArrowImageView.leadingAnchor, constant: -12),
+            textStack.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 12),
+            textStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -12),
+            textStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            rightArrowImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            rightArrowImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            rightArrowImageView.widthAnchor.constraint(equalToConstant: 12),
+            rightArrowImageView.heightAnchor.constraint(equalToConstant: 16),
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80)
+        ])
     }
 
     required init?(coder: NSCoder) {
