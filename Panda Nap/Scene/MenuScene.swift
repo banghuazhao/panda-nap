@@ -16,16 +16,24 @@ class MenuScene: SKScene {
     private var panGesture: UIPanGestureRecognizer?
     private var touchStartLocation: CGPoint?
     private let hint = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
+    private let hintBackdrop = SKShapeNode(rectOf: CGSize(width: 300, height: 42), cornerRadius: 21)
     private var moreAppsButton: SKShapeNode?
+    private var settingsButton: SKShapeNode?
 
     override func didMove(to view: SKView) {
         SKTAudio.sharedInstance().playBackgroundMusic("oboarding.mp3")
 
         addChild(moveableNode)
 
+        hintBackdrop.fillColor = SKColor(red: 0.10, green: 0.25, blue: 0.16, alpha: 0.91)
+        hintBackdrop.strokeColor = SKColor(red: 0.72, green: 0.88, blue: 0.48, alpha: 0.92)
+        hintBackdrop.lineWidth = 2
+        hintBackdrop.zPosition = 99
+        addChild(hintBackdrop)
         hint.text = "Swipe to explore levels".localized()
-        hint.fontSize = 18
+        hint.fontSize = 16
         hint.fontColor = .white
+        hint.verticalAlignmentMode = .center
         hint.zPosition = 100
         addChild(hint)
 
@@ -42,6 +50,20 @@ class MenuScene: SKScene {
         button.addChild(buttonLabel)
         addChild(button)
         moreAppsButton = button
+
+        let settings = SKShapeNode(rectOf: CGSize(width: 112, height: 44), cornerRadius: 22)
+        settings.fillColor = SKColor(red: 0.10, green: 0.31, blue: 0.19, alpha: 0.95)
+        settings.strokeColor = SKColor(red: 0.72, green: 0.88, blue: 0.48, alpha: 1)
+        settings.lineWidth = 2
+        settings.zPosition = 101
+        let settingsLabel = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
+        settingsLabel.text = "Settings".localized()
+        settingsLabel.fontSize = 15
+        settingsLabel.fontColor = .white
+        settingsLabel.verticalAlignmentMode = .center
+        settings.addChild(settingsLabel)
+        addChild(settings)
+        settingsButton = settings
         layoutUI()
 
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
@@ -156,16 +178,22 @@ class MenuScene: SKScene {
     }
 
     func layoutUI() {
-        guard let view, let moreAppsButton else { return }
+        guard let view, let moreAppsButton, let settingsButton else { return }
         let origin = convertPoint(fromView: .zero)
         let pointScale = abs(convertPoint(fromView: CGPoint(x: 1, y: 0)).x - origin.x)
         let safe = view.safeAreaInsets
         let top = convertPoint(fromView: CGPoint(x: 0, y: safe.top + 31)).y
+        let left = convertPoint(fromView: CGPoint(x: safe.left + 16, y: 0)).x
         let right = convertPoint(fromView: CGPoint(x: view.bounds.width - safe.right - 16, y: 0)).x
-        hint.fontSize = 18 * pointScale
-        hint.position = CGPoint(x: frame.midX, y: top - 8 * pointScale)
+        let bottom = convertPoint(fromView: CGPoint(x: 0, y: view.bounds.height - safe.bottom - 32)).y
+        hintBackdrop.setScale(pointScale)
+        hintBackdrop.position = CGPoint(x: frame.midX, y: bottom)
+        hint.fontSize = 16 * pointScale
+        hint.position = hintBackdrop.position
         moreAppsButton.setScale(pointScale)
         moreAppsButton.position = CGPoint(x: right - 56 * pointScale, y: top)
+        settingsButton.setScale(pointScale)
+        settingsButton.position = CGPoint(x: left + 56 * pointScale, y: top)
     }
 
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -190,6 +218,10 @@ class MenuScene: SKScene {
               hypot(touchLocation.x - start.x, touchLocation.y - start.y) < 20 else { return }
         if moreAppsButton?.calculateAccumulatedFrame().contains(touchLocation) == true {
             view?.window?.rootViewController?.present(MoreAppsViewController(), animated: true)
+            return
+        }
+        if settingsButton?.calculateAccumulatedFrame().contains(touchLocation) == true {
+            (view?.window?.rootViewController as? GameViewController)?.showSettings(for: self)
             return
         }
 

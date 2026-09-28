@@ -22,6 +22,40 @@
 
 import AVFoundation
 
+enum GameSettings {
+  private static let musicKey = "game.musicEnabled"
+  private static let effectsKey = "game.effectsEnabled"
+  private static let hapticsKey = "game.hapticsEnabled"
+  private static let tutorialKey = "game.tutorialCompleted"
+
+  static var musicEnabled: Bool {
+    get { UserDefaults.standard.object(forKey: musicKey) as? Bool ?? true }
+    set {
+      UserDefaults.standard.set(newValue, forKey: musicKey)
+      if newValue {
+        SKTAudio.sharedInstance().resumeBackgroundMusic()
+      } else {
+        SKTAudio.sharedInstance().pauseBackgroundMusic()
+      }
+    }
+  }
+
+  static var effectsEnabled: Bool {
+    get { UserDefaults.standard.object(forKey: effectsKey) as? Bool ?? true }
+    set { UserDefaults.standard.set(newValue, forKey: effectsKey) }
+  }
+
+  static var hapticsEnabled: Bool {
+    get { UserDefaults.standard.object(forKey: hapticsKey) as? Bool ?? true }
+    set { UserDefaults.standard.set(newValue, forKey: hapticsKey) }
+  }
+
+  static var tutorialCompleted: Bool {
+    get { UserDefaults.standard.bool(forKey: tutorialKey) }
+    set { UserDefaults.standard.set(newValue, forKey: tutorialKey) }
+  }
+}
+
 /**
  * Audio player that uses AVFoundation to play looping background music and
  * short sound effects. For when using SKActions just isn't good enough.
@@ -51,7 +85,7 @@ public class SKTAudio {
     if let player = backgroundMusicPlayer {
       player.numberOfLoops = -1
       player.prepareToPlay()
-      player.play()
+      if GameSettings.musicEnabled { player.play() }
     } else {
       print("Could not create audio player: \(error!)")
     }
@@ -67,13 +101,14 @@ public class SKTAudio {
 
   public func resumeBackgroundMusic() {
     if let player = backgroundMusicPlayer {
-      if !player.isPlaying {
+      if GameSettings.musicEnabled && !player.isPlaying {
         player.play()
       }
     }
   }
 
   public func playSoundEffect(_ filename: String) {
+    guard GameSettings.effectsEnabled else { return }
     let url = Bundle.main.url(forResource: filename, withExtension: nil)
     if (url == nil) {
       print("Could not find file: \(filename)")

@@ -27,10 +27,10 @@ class StoneNode: SKSpriteNode, EventListenerNode, InteractiveNode {
       y: children.map(\.position.y).reduce(0, +) / CGFloat(children.count))
     game.blockRemoved(at: convert(center, to: game), stone: true)
     physicsBody = nil
+    SKTAudio.sharedInstance().playSoundEffect("pop.mp3")
     let vanish = SKAction.group([.scale(to: 0.72, duration: 0.2), .fadeOut(withDuration: 0.2)])
     vanish.timingMode = .easeIn
-    run(.sequence([.playSoundFileNamed("pop.mp3", waitForCompletion: false), vanish,
-                   .removeFromParent()]))
+    run(.sequence([vanish, .removeFromParent()]))
   }
   
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

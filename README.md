@@ -29,7 +29,7 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 - **Intuitive Touch Controls**: Simple tap-to-remove obstacle mechanics
 - **Progressive Difficulty**: Levels become more challenging as you advance
 - **Beautiful Artwork**: Charming panda character and relaxing visual design
-- **Sound Effects**: Immersive audio with background music and sound effects
+- **Adjustable Feedback**: Separate controls for music, sound effects, and haptics
 - **Multi-language Support**: Available in English and Chinese (Simplified & Traditional)
 
 ## 🎯 How to Play
@@ -39,6 +39,9 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 3. **Challenge**: The panda must not fall to the ground (she'll wake up!)
 4. **Success**: Guide the panda to land gently on the bed
 5. **Progression**: Complete each level to unlock the next one
+6. **Results**: Choose Retry or Levels after a loss, and Next Level after a win
+
+The first level highlights a removable block until you make your first move. Open **Settings** from the level map or a level to adjust music, sound effects, and haptics.
 
 ## 🛠 Technical Details
 
