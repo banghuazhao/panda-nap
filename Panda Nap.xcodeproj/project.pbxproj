@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A20000000000000000000011 /* Level11.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* Level11.sks */; };
+		A20000000000000000000012 /* Level12.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000022 /* Level12.sks */; };
+		A20000000000000000000013 /* Level13.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* Level13.sks */; };
 		A10000000000000000000001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, ); productRef = A10000000000000000000002 /* GoogleMobileAds */; };
 		995D076024A62B6A00C2C115 /* oboarding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 995D075F24A62B6A00C2C115 /* oboarding.mp3 */; };
 		995D076224A6375800C2C115 /* Level2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 995D076124A6375200C2C115 /* Level2.sks */; };
@@ -65,6 +68,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A20000000000000000000021 /* Level11.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level11.sks; sourceTree = "<group>"; };
+		A20000000000000000000022 /* Level12.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level12.sks; sourceTree = "<group>"; };
+		A20000000000000000000023 /* Level13.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level13.sks; sourceTree = "<group>"; };
 		995D075F24A62B6A00C2C115 /* oboarding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = oboarding.mp3; sourceTree = "<group>"; };
 		995D076124A6375200C2C115 /* Level2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2.sks; sourceTree = "<group>"; };
 		995D076324A637C700C2C115 /* Level4.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level4.sks; sourceTree = "<group>"; };
@@ -210,6 +216,9 @@
 				996398D624BCABB30068867D /* Level8.sks */,
 				9963D993249FA25600033FBD /* Level9.sks */,
 				996398D824BCB0FE0068867D /* Level10.sks */,
+				A20000000000000000000021 /* Level11.sks */,
+				A20000000000000000000022 /* Level12.sks */,
+				A20000000000000000000023 /* Level13.sks */,
 				9963D918249EF24800033FBD /* GameScene.swift */,
 				9963D9F424A5D0CA00033FBD /* MenuScene.sks */,
 				9963D9F224A5D04500033FBD /* MenuScene.swift */,
@@ -368,6 +377,9 @@
 				995D076024A62B6A00C2C115 /* oboarding.mp3 in Resources */,
 				9963D923249EF24A00033FBD /* LaunchScreen.storyboard in Resources */,
 				996398D924BCB1010068867D /* Level10.sks in Resources */,
+				A20000000000000000000011 /* Level11.sks in Resources */,
+				A20000000000000000000012 /* Level12.sks in Resources */,
+				A20000000000000000000013 /* Level13.sks in Resources */,
 				9963D994249FA26100033FBD /* Level9.sks in Resources */,
 				9963D971249F5E0800033FBD /* InfoPlist.strings in Resources */,
 				9963D9F524A5D0CA00033FBD /* MenuScene.sks in Resources */,

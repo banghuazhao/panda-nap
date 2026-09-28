@@ -25,11 +25,12 @@ struct Constants {
     static let bannerAdUnitID = Bundle.main.object(forInfoDictionaryKey: "bannerViewAdUnitID") as? String ?? ""
     static let interstitialAdID = Bundle.main.object(forInfoDictionaryKey: "interstitialAdID") as? String ?? ""
     
-    static let totalLevel = 10
+    static let totalLevel = 13
 
     struct UserDefaultsKeys {
         static let OPEN_COUNT = "OPEN_COUNT"
         static let BEST_LEVEL = "BEST_LEVEL"
+        static let COMPLETED_LEVEL = "COMPLETED_LEVEL"
     }
 
     static var isIphoneFaceID: Bool {

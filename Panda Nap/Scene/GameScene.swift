@@ -281,7 +281,9 @@ class GameScene: SKScene {
         backdrop.position = CGPoint(x: frame.midX, y: frame.midY)
         backdrop.zPosition = 190
         addChild(backdrop)
-        let message = MessageNode(message: title, detail: detail, won: won, pointScale: pointScale)
+        let message = MessageNode(message: title, detail: detail, won: won,
+                                  finalLevel: won && currentLevel == Constants.totalLevel,
+                                  pointScale: pointScale)
         message.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(message)
         resultCard = message
@@ -296,7 +298,8 @@ class GameScene: SKScene {
 
     private func advanceToNextLevel() {
         guard won else { return }
-        let next = currentLevel < Constants.totalLevel ? currentLevel + 1 : 1
+        guard currentLevel < Constants.totalLevel else { showLevels(); return }
+        let next = currentLevel + 1
         if let nextScene = GameScene.level(levelNum: next) {
             view?.presentScene(nextScene, transition: .fade(withDuration: 0.25))
         }
@@ -333,6 +336,14 @@ class GameScene: SKScene {
         guard playable else { return }
         playable = false
         won = true
+        let completed = UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.COMPLETED_LEVEL)
+        if currentLevel > completed {
+            UserDefaults.standard.set(currentLevel, forKey: Constants.UserDefaultsKeys.COMPLETED_LEVEL)
+        }
+        if currentLevel < Constants.totalLevel && currentLevel + 1 > bestLevel {
+            bestLevel = currentLevel + 1
+            UserDefaults.standard.set(bestLevel, forKey: Constants.UserDefaultsKeys.BEST_LEVEL)
+        }
         consecutiveLosses = 0
         SKTAudio.sharedInstance().pauseBackgroundMusic()
         SKTAudio.sharedInstance().playSoundEffect("victory.mp3")
@@ -340,7 +351,10 @@ class GameScene: SKScene {
         burst(at: bedNode.position, color: SKColor(red: 0.94, green: 0.78, blue: 0.27, alpha: 1),
               count: 24, distance: 105)
         resultHaptic(success: true)
-        showResult("Nice job!".localized(), detail: "Choose what to do next".localized(), won: true)
+        let finished = currentLevel == Constants.totalLevel
+        showResult(finished ? "All levels complete!".localized() : "Nice job!".localized(),
+                   detail: finished ? "Explore or replay your favorite levels".localized()
+                                    : "Choose what to do next".localized(), won: true)
     }
 
     class func level(levelNum: Int) -> GameScene? {

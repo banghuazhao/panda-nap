@@ -30,7 +30,10 @@ class MenuScene: SKScene {
         hintBackdrop.lineWidth = 2
         hintBackdrop.zPosition = 99
         addChild(hintBackdrop)
-        hint.text = "Swipe to explore levels".localized()
+        let allComplete = UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.COMPLETED_LEVEL)
+            >= Constants.totalLevel
+        hint.text = (allComplete ? "Replay any level"
+                                 : "Swipe to explore levels").localized()
         hint.fontSize = 16
         hint.fontColor = .white
         hint.verticalAlignmentMode = .center
@@ -108,7 +111,7 @@ class MenuScene: SKScene {
         }
 
         // current level
-        let levelCurrent = SKSpriteNode(imageNamed: "fruit_yellow")
+        let levelCurrent = SKSpriteNode(imageNamed: allComplete ? "fruit_orange" : "fruit_yellow")
         levelCurrent.position = levelNodePoints[bestLevel - 1]
         if bestLevel % 2 == 0 {
             levelCurrent.xScale = levelCurrent.xScale * -1

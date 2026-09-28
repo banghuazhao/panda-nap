@@ -10,7 +10,8 @@ final class MessageNode: SKNode {
 
     private var buttons: [(choice: Choice, node: SKShapeNode)] = []
 
-    init(message: String, detail: String, won: Bool, pointScale: CGFloat) {
+    init(message: String, detail: String, won: Bool, finalLevel: Bool = false,
+         pointScale: CGFloat) {
         super.init()
 
         let cardSize = CGSize(width: 378 * pointScale, height: 174 * pointScale)
@@ -36,10 +37,15 @@ final class MessageNode: SKNode {
         subtitle.position.y = 12 * pointScale
         addChild(subtitle)
 
-        let choices: [(Choice, String)] = won
-            ? [(.next, "Next Level".localized()), (.retry, "Retry".localized()),
-               (.levels, "Levels".localized())]
-            : [(.retry, "Retry".localized()), (.levels, "Levels".localized())]
+        let choices: [(Choice, String)]
+        if finalLevel {
+            choices = [(.levels, "Levels".localized()), (.retry, "Retry".localized())]
+        } else if won {
+            choices = [(.next, "Next Level".localized()), (.retry, "Retry".localized()),
+                       (.levels, "Levels".localized())]
+        } else {
+            choices = [(.retry, "Retry".localized()), (.levels, "Levels".localized())]
+        }
         let spacing: CGFloat = 118 * pointScale
         let firstX = -CGFloat(choices.count - 1) * spacing / 2
         for (index, choice) in choices.enumerated() {
