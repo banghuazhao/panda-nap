@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A20000000000000000000011 /* Level11.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* Level11.sks */; };
-		A20000000000000000000012 /* Level12.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000022 /* Level12.sks */; };
-		A20000000000000000000013 /* Level13.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* Level13.sks */; };
-		A10000000000000000000001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, ); productRef = A10000000000000000000002 /* GoogleMobileAds */; };
+		A40000000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000002 /* PrivacyInfo.xcprivacy */; };
 		995D076024A62B6A00C2C115 /* oboarding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 995D075F24A62B6A00C2C115 /* oboarding.mp3 */; };
 		995D076224A6375800C2C115 /* Level2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 995D076124A6375200C2C115 /* Level2.sks */; };
 		995D076524A6382900C2C115 /* Level7.sks in Resources */ = {isa = PBXBuildFile; fileRef = 995D076424A6381F00C2C115 /* Level7.sks */; };
@@ -58,19 +55,22 @@
 		9963D994249FA26100033FBD /* Level9.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9963D993249FA25600033FBD /* Level9.sks */; };
 		9963D9F324A5D04500033FBD /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9963D9F224A5D04500033FBD /* MenuScene.swift */; };
 		9963D9F524A5D0CA00033FBD /* MenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9963D9F424A5D0CA00033FBD /* MenuScene.sks */; };
-		9971C8A825FA5842008CFCF9 /* Ads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8A725FA5842008CFCF9 /* Ads.swift */; };
 		9971C8AC25FA5953008CFCF9 /* AppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8AB25FA5953008CFCF9 /* AppItem.swift */; };
 		9971C8B225FA5978008CFCF9 /* MoreAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8B125FA5978008CFCF9 /* MoreAppsViewController.swift */; };
 		9971C8B425FA59F0008CFCF9 /* MoreAppsHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8B025FA5973008CFCF9 /* MoreAppsHeaderCell.swift */; };
 		9971C8B625FA59F2008CFCF9 /* AppItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8AF25FA5972008CFCF9 /* AppItemCell.swift */; };
 		9971C8B925FA59FF008CFCF9 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8B825FA59FF008CFCF9 /* UIFont+Extension.swift */; };
 		9971C8BC25FA5A0D008CFCF9 /* UIButtonLargerArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9971C8BB25FA5A0C008CFCF9 /* UIButtonLargerArea.swift */; };
+		A10000000000000000000001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = A10000000000000000000002 /* GoogleMobileAds */; };
+		A10000000000000000000006 /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = A10000000000000000000005 /* GoogleUserMessagingPlatform */; };
+		A30000000000000000000002 /* AdPrivacyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000003 /* AdPrivacyManager.swift */; };
+		A20000000000000000000011 /* Level11.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* Level11.sks */; };
+		A20000000000000000000012 /* Level12.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000022 /* Level12.sks */; };
+		A20000000000000000000013 /* Level13.sks in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* Level13.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A20000000000000000000021 /* Level11.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level11.sks; sourceTree = "<group>"; };
-		A20000000000000000000022 /* Level12.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level12.sks; sourceTree = "<group>"; };
-		A20000000000000000000023 /* Level13.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level13.sks; sourceTree = "<group>"; };
+		A40000000000000000000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		995D075F24A62B6A00C2C115 /* oboarding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = oboarding.mp3; sourceTree = "<group>"; };
 		995D076124A6375200C2C115 /* Level2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2.sks; sourceTree = "<group>"; };
 		995D076324A637C700C2C115 /* Level4.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level4.sks; sourceTree = "<group>"; };
@@ -124,7 +124,6 @@
 		9963D993249FA25600033FBD /* Level9.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level9.sks; sourceTree = "<group>"; };
 		9963D9F224A5D04500033FBD /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		9963D9F424A5D0CA00033FBD /* MenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MenuScene.sks; sourceTree = "<group>"; };
-		9971C8A725FA5842008CFCF9 /* Ads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ads.swift; sourceTree = "<group>"; };
 		9971C8AB25FA5953008CFCF9 /* AppItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppItem.swift; sourceTree = "<group>"; };
 		9971C8AF25FA5972008CFCF9 /* AppItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppItemCell.swift; sourceTree = "<group>"; };
 		9971C8B025FA5973008CFCF9 /* MoreAppsHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreAppsHeaderCell.swift; sourceTree = "<group>"; };
@@ -132,6 +131,10 @@
 		9971C8B825FA59FF008CFCF9 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		9971C8BB25FA5A0C008CFCF9 /* UIButtonLargerArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonLargerArea.swift; sourceTree = "<group>"; };
 		9971C8D925FA6115008CFCF9 /* Panda Nap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Panda Nap.entitlements"; sourceTree = "<group>"; };
+		A30000000000000000000003 /* AdPrivacyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdPrivacyManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000021 /* Level11.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level11.sks; sourceTree = "<group>"; };
+		A20000000000000000000022 /* Level12.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level12.sks; sourceTree = "<group>"; };
+		A20000000000000000000023 /* Level13.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level13.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -144,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000001 /* GoogleMobileAds in Frameworks */,
+				A10000000000000000000006 /* GoogleUserMessagingPlatform in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,6 +186,7 @@
 				9963D91F249EF24A00033FBD /* Assets.xcassets */,
 				9963D921249EF24A00033FBD /* LaunchScreen.storyboard */,
 				9963D924249EF24A00033FBD /* Info.plist */,
+				A40000000000000000000002 /* PrivacyInfo.xcprivacy */,
 				9963D973249F5E0800033FBD /* InfoPlist.strings */,
 				9963D976249F5E0A00033FBD /* Localizable.strings */,
 			);
@@ -193,7 +198,7 @@
 			children = (
 				9963D954249F5DBC00033FBD /* SKTUtils */,
 				9963D92B249EF2E900033FBD /* Constants.swift */,
-				9971C8A725FA5842008CFCF9 /* Ads.swift */,
+				A30000000000000000000003 /* AdPrivacyManager.swift */,
 				9963D92C249EF2E900033FBD /* Music.swift */,
 				9963D93A249EF2E900033FBD /* Other.swift */,
 				9963D93B249EF2E900033FBD /* StoreReviewHelper.swift */,
@@ -296,6 +301,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9963D927249EF24A00033FBD /* Build configuration list for PBXNativeTarget "Panda Nap" */;
 			buildPhases = (
+				A30000000000000000000001 /* Validate Release AdMob IDs */,
 				9963D90B249EF24700033FBD /* Sources */,
 				9963D90C249EF24700033FBD /* Frameworks */,
 				9963D90D249EF24700033FBD /* Resources */,
@@ -308,10 +314,11 @@
 				994D48252E18CFAB00DB5AC4 /* Config */,
 			);
 			name = "Panda Nap";
-			productName = "Panda Nap";
 			packageProductDependencies = (
 				A10000000000000000000002 /* GoogleMobileAds */,
+				A10000000000000000000005 /* GoogleUserMessagingPlatform */,
 			);
+			productName = "Panda Nap";
 			productReference = 9963D90F249EF24800033FBD /* Panda Nap.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -343,6 +350,7 @@
 			mainGroup = 9963D906249EF24700033FBD;
 			packageReferences = (
 				A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				A10000000000000000000004 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
 			);
 			productRefGroup = 9963D910249EF24800033FBD /* Products */;
 			projectDirPath = "";
@@ -382,19 +390,37 @@
 				A20000000000000000000013 /* Level13.sks in Resources */,
 				9963D994249FA26100033FBD /* Level9.sks in Resources */,
 				9963D971249F5E0800033FBD /* InfoPlist.strings in Resources */,
+				A40000000000000000000001 /* PrivacyInfo.xcprivacy in Resources */,
 				9963D9F524A5D0CA00033FBD /* MenuScene.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A30000000000000000000001 /* Validate Release AdMob IDs */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Validate Release AdMob IDs";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "\"${SRCROOT}/Scripts/validate-release-ads.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9963D90B249EF24700033FBD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9971C8A825FA5842008CFCF9 /* Ads.swift in Sources */,
+				A30000000000000000000002 /* AdPrivacyManager.swift in Sources */,
 				9963D919249EF24800033FBD /* GameScene.swift in Sources */,
 				9963D986249F641F00033FBD /* BlockNode.swift in Sources */,
 				9971C8BC25FA5A0D008CFCF9 /* UIButtonLargerArea.swift in Sources */,
@@ -469,22 +495,6 @@
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-        A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
-            isa = XCRemoteSwiftPackageReference;
-            repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
-            requirement = { kind = upToNextMajorVersion; minimumVersion = 13.10.0; };
-        };
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-        A10000000000000000000002 /* GoogleMobileAds */ = {
-            isa = XCSwiftPackageProductDependency;
-            package = A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
-            productName = GoogleMobileAds;
-        };
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		9963D925249EF24A00033FBD /* Debug */ = {
@@ -609,11 +619,11 @@
 		};
 		9963D928249EF24A00033FBD /* Debug */ = {
 			isa = XCBuildConfiguration;
-						buildSettings = {
+			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.60;
+				CURRENT_PROJECT_VERSION = 1.2.0;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -621,8 +631,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.6;
-				OTHER_LDFLAGS = ("$(inherited)", "-ObjC");
+				MARKETING_VERSION = 1.2.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Banghua-Zhao.Panda-Nap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
@@ -633,11 +646,11 @@
 		};
 		9963D929249EF24A00033FBD /* Release */ = {
 			isa = XCBuildConfiguration;
-						buildSettings = {
+			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.60;
+				CURRENT_PROJECT_VERSION = 1.2.0;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -645,8 +658,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.6;
-				OTHER_LDFLAGS = ("$(inherited)", "-ObjC");
+				MARKETING_VERSION = 1.2.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Banghua-Zhao.Panda-Nap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
@@ -677,6 +693,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.10.0;
+			};
+		};
+		A10000000000000000000004 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A10000000000000000000002 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000003 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		A10000000000000000000005 /* GoogleUserMessagingPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000004 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
+			productName = GoogleUserMessagingPlatform;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9963D907249EF24700033FBD /* Project object */;
 }

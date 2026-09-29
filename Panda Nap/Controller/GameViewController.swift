@@ -39,6 +39,13 @@ class GameViewController: UIViewController {
         (scene as? MenuScene)?.layoutUI()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        #if !targetEnvironment(macCatalyst)
+        AdPrivacyManager.shared.start(from: self)
+        #endif
+    }
+
     func showSettings(for scene: SKScene) {
         guard presentedViewController == nil else { return }
         scene.isPaused = true
@@ -50,7 +57,7 @@ class GameViewController: UIViewController {
         }
         let navigation = UINavigationController(rootViewController: settings)
         navigation.modalPresentationStyle = .formSheet
-        navigation.preferredContentSize = CGSize(width: 400, height: 330)
+        navigation.preferredContentSize = CGSize(width: 400, height: 390)
         navigation.isModalInPresentation = true
         present(navigation, animated: true)
     }
@@ -70,6 +77,9 @@ class GameViewController: UIViewController {
 
 private final class GameSettingsViewController: UITableViewController {
     var onClose: (() -> Void)?
+    #if !targetEnvironment(macCatalyst)
+    private var privacyObserver: NSObjectProtocol?
+    #endif
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,16 +87,43 @@ private final class GameSettingsViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Done".localized(), style: .done, target: self, action: #selector(close))
         tableView.rowHeight = 58
+        #if !targetEnvironment(macCatalyst)
+        privacyObserver = NotificationCenter.default.addObserver(
+            forName: .adPrivacyDidChange, object: nil, queue: .main
+        ) { [weak self] _ in self?.tableView.reloadData() }
+        #endif
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
+    #if !targetEnvironment(macCatalyst)
+    deinit {
+        if let privacyObserver { NotificationCenter.default.removeObserver(privacyObserver) }
+    }
+    #endif
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        2
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard section == 1 else { return 3 }
+        #if !targetEnvironment(macCatalyst)
+        return 2
+        #else
+        return 1
+        #endif
+    }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        "Audio & Feedback".localized()
+        section == 0 ? "Audio & Feedback".localized() : "Privacy".localized()
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        if indexPath.section == 1 {
+            cell.textLabel?.text = (indexPath.row == 0 ? "Privacy Policy" : "Privacy settings").localized()
+            cell.accessoryType = .disclosureIndicator
+            return cell
+        }
         let titles = ["Music".localized(), "Sound Effects".localized(), "Haptics".localized()]
         let values = [GameSettings.musicEnabled, GameSettings.effectsEnabled, GameSettings.hapticsEnabled]
         cell.textLabel?.text = titles[indexPath.row]
@@ -98,6 +135,43 @@ private final class GameSettingsViewController: UITableViewController {
         toggle.addTarget(self, action: #selector(settingChanged(_:)), for: .valueChanged)
         cell.accessoryView = toggle
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard indexPath.section == 1 else { return }
+        if indexPath.row == 0 {
+            guard let url = URL(string: "https://apps-bay.github.io/Apps-Bay-Website/privacy/") else { return }
+            UIApplication.shared.open(url)
+            return
+        }
+        #if !targetEnvironment(macCatalyst)
+        if AdPrivacyManager.shared.canPresentPrivacyOptions {
+            AdPrivacyManager.shared.presentPrivacyOptions(from: self)
+        } else {
+            let optedOut = AdPrivacyManager.shared.advertisingOptedOut
+            let trackingDenied = AdPrivacyManager.shared.trackingPermissionDenied
+            let regionalAdsBlocked = AdPrivacyManager.shared.adsBlockedByRegionalPrivacy
+            let alert = UIAlertController(
+                title: (optedOut || regionalAdsBlocked ? "Ads are off" : trackingDenied ? "Tracking is off" : "Ad choices").localized(),
+                message: (optedOut
+                    ? "Panda Nap is not requesting ads. Tracking permission can be changed in iOS Settings."
+                    : regionalAdsBlocked
+                        ? "Ads are off while tracking is denied in your region. Choose Stop ads to keep them off if that setting changes."
+                    : trackingDenied
+                        ? "Tracking remains off. You can stop all ad requests here without changing iOS Settings."
+                        : "You can stop all ad requests here, including data shared for advertising.").localized(),
+                preferredStyle: .alert
+            )
+            if !optedOut {
+                alert.addAction(UIAlertAction(title: "Stop ads".localized(), style: .destructive) { _ in
+                    AdPrivacyManager.shared.stopAds()
+                })
+            }
+            alert.addAction(UIAlertAction(title: "OK".localized(), style: .default))
+            present(alert, animated: true)
+        }
+        #endif
     }
 
     @objc private func settingChanged(_ sender: UISwitch) {

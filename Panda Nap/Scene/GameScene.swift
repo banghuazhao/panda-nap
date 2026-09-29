@@ -25,6 +25,7 @@ private var consecutiveLosses = 0
 class GameScene: SKScene {
     #if !targetEnvironment(macCatalyst)
     private var interstitialAd: InterstitialAd?
+    private var privacyObserver: NSObjectProtocol?
     #endif
 
     private let hud = SKNode()
@@ -78,13 +79,28 @@ class GameScene: SKScene {
         installTutorial()
 
         #if !targetEnvironment(macCatalyst)
-        if consecutiveLosses == 1 {
-            InterstitialAd.load(with: Constants.interstitialAdID, request: Request()) { [weak self] ad, error in
+        privacyObserver = NotificationCenter.default.addObserver(
+            forName: .adPrivacyDidChange, object: nil, queue: .main
+        ) { [weak self] _ in self?.interstitialAd = nil }
+        if consecutiveLosses == 1, let request = AdPrivacyManager.shared.adRequest() {
+            let privacyRevision = AdPrivacyManager.shared.revision
+            InterstitialAd.load(with: Constants.interstitialAdID, request: request) { [weak self] ad, error in
                 if let error { print("Failed to load interstitial: \(error.localizedDescription)") }
+                guard AdPrivacyManager.shared.revision == privacyRevision,
+                      AdPrivacyManager.shared.canRequestAds else { return }
                 self?.interstitialAd = ad
                 ad?.fullScreenContentDelegate = self
             }
         }
+        #endif
+    }
+
+    override func willMove(from view: SKView) {
+        super.willMove(from: view)
+        #if !targetEnvironment(macCatalyst)
+        if let privacyObserver { NotificationCenter.default.removeObserver(privacyObserver) }
+        privacyObserver = nil
+        interstitialAd = nil
         #endif
     }
 
@@ -181,11 +197,11 @@ class GameScene: SKScene {
         tutorialHalo.position = targetPoint
         hintNode.setScale(pointScale)
         let inset = 140 * pointScale
-        let x = min(max(targetPoint.x, frame.minX + inset), frame.maxX - inset)
+        let hintX = min(max(targetPoint.x, frame.minX + inset), frame.maxX - inset)
         let preferredY = targetPoint.y + 67 * pointScale
-        let y = preferredY < frame.maxY - 85 * pointScale
+        let hintY = preferredY < frame.maxY - 85 * pointScale
             ? preferredY : targetPoint.y - 67 * pointScale
-        hintNode.position = CGPoint(x: x, y: y)
+        hintNode.position = CGPoint(x: hintX, y: hintY)
     }
 
     override func didSimulatePhysics() {
@@ -309,7 +325,9 @@ class GameScene: SKScene {
         #if !targetEnvironment(macCatalyst)
         if !won && consecutiveLosses >= 2 {
             consecutiveLosses = 0
-            if let ad = interstitialAd, let controller = view?.window?.rootViewController {
+            if let ad = interstitialAd,
+               let controller = view?.window?.rootViewController,
+               AdPrivacyManager.shared.canRequestAds {
                 ad.present(from: controller)
                 return
             }
@@ -336,13 +354,13 @@ class GameScene: SKScene {
         guard playable else { return }
         playable = false
         won = true
-        let completed = UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.COMPLETED_LEVEL)
+        let completed = UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.completedLevel)
         if currentLevel > completed {
-            UserDefaults.standard.set(currentLevel, forKey: Constants.UserDefaultsKeys.COMPLETED_LEVEL)
+            UserDefaults.standard.set(currentLevel, forKey: Constants.UserDefaultsKeys.completedLevel)
         }
         if currentLevel < Constants.totalLevel && currentLevel + 1 > bestLevel {
             bestLevel = currentLevel + 1
-            UserDefaults.standard.set(bestLevel, forKey: Constants.UserDefaultsKeys.BEST_LEVEL)
+            UserDefaults.standard.set(bestLevel, forKey: Constants.UserDefaultsKeys.bestLevel)
         }
         consecutiveLosses = 0
         SKTAudio.sharedInstance().pauseBackgroundMusic()
@@ -362,7 +380,7 @@ class GameScene: SKScene {
         scene.currentLevel = levelNum
         if levelNum > bestLevel {
             bestLevel = levelNum
-            UserDefaults.standard.set(bestLevel, forKey: Constants.UserDefaultsKeys.BEST_LEVEL)
+            UserDefaults.standard.set(bestLevel, forKey: Constants.UserDefaultsKeys.bestLevel)
         }
         scene.scaleMode = .aspectFill
         return scene

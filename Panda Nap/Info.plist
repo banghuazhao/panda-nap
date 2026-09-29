@@ -29,7 +29,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<string>Panda Nap uses your device's advertising identifier to help choose relevant ads, for example, which ad appears on the More Apps screen or after a level ends.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
@@ -123,7 +123,7 @@
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>

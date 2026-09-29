@@ -1,0 +1,4 @@
+# SKTUtils contains third-party SpriteKit helpers kept under their original license.
+# Lint the app's own Swift sources without rewriting that vendored code.
+excluded:
+  - Panda Nap/Tools/SKTUtils

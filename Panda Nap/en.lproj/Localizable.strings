@@ -28,3 +28,15 @@
 "All levels complete!" = "All levels complete!";
 "Explore or replay your favorite levels" = "Explore or replay your favorite levels";
 "Replay any level" = "Replay any level";
+"Privacy" = "Privacy";
+"Privacy settings" = "Privacy settings";
+"Privacy Policy" = "Privacy Policy";
+"Tracking is off" = "Tracking is off";
+"Ad choices" = "Ad choices";
+"Ads are off" = "Ads are off";
+"Tracking remains off. You can stop all ad requests here without changing iOS Settings." = "Tracking remains off. You can stop all ad requests here without changing iOS Settings.";
+"You can stop all ad requests here, including data shared for advertising." = "You can stop all ad requests here, including data shared for advertising.";
+"Panda Nap is not requesting ads. Tracking permission can be changed in iOS Settings." = "Panda Nap is not requesting ads. Tracking permission can be changed in iOS Settings.";
+"Ads are off while tracking is denied in your region. Choose Stop ads to keep them off if that setting changes." = "Ads are off while tracking is denied in your region. Choose Stop ads to keep them off if that setting changes.";
+"Stop ads" = "Stop ads";
+"OK" = "OK";

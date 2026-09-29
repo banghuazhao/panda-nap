@@ -30,7 +30,7 @@ class MenuScene: SKScene {
         hintBackdrop.lineWidth = 2
         hintBackdrop.zPosition = 99
         addChild(hintBackdrop)
-        let allComplete = UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.COMPLETED_LEVEL)
+        let allComplete = UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.completedLevel)
             >= Constants.totalLevel
         hint.text = (allComplete ? "Replay any level"
                                  : "Swipe to explore levels").localized()
@@ -73,7 +73,10 @@ class MenuScene: SKScene {
         pan.cancelsTouchesInView = false
         view.addGestureRecognizer(pan)
         panGesture = pan
+        installLevelMap(allComplete: allComplete)
+    }
 
+    private func installLevelMap(allComplete: Bool) {
         let levelTree = SKSpriteNode(imageNamed: "level_tree")
         levelTree.anchorPoint = CGPoint(x: 0.5, y: 0)
         levelTree.zPosition = 2
@@ -82,27 +85,27 @@ class MenuScene: SKScene {
 
         var levelNodePoints = [CGPoint]()
 
-        for i in 1 ... Constants.totalLevel {
-            let x: CGFloat = i % 2 == 1 ? 200 : -160
-            let y: CGFloat = -size.height * 2.0 + CGFloat(1100 + i * 200)
-            levelNodePoints.append(CGPoint(x: x, y: y))
+        for levelNumber in 1 ... Constants.totalLevel {
+            let branchX: CGFloat = levelNumber % 2 == 1 ? 200 : -160
+            let branchY: CGFloat = -size.height * 2.0 + CGFloat(1100 + levelNumber * 200)
+            levelNodePoints.append(CGPoint(x: branchX, y: branchY))
         }
 
         // previous level
         if bestLevel > 1 {
-            for i in 1 ... bestLevel - 1 {
+            for levelNumber in 1 ... bestLevel - 1 {
                 let level = SKSpriteNode(imageNamed: "fruit_orange")
-                level.position = levelNodePoints[i - 1]
-                if i % 2 == 0 {
-                    level.xScale = level.xScale * -1
+                level.position = levelNodePoints[levelNumber - 1]
+                if levelNumber % 2 == 0 {
+                    level.xScale *= -1
                 }
-                level.name = "level_\(i)"
+                level.name = "level_\(levelNumber)"
                 moveableNode.addChild(level)
                 let labelNode = SKLabelNode(fontNamed: "Helvetica-Bold")
-                labelNode.text = "\(i)"
+                labelNode.text = "\(levelNumber)"
                 labelNode.fontColor = SKColor.white
-                if i % 2 == 0 {
-                    labelNode.xScale = labelNode.xScale * -1
+                if levelNumber % 2 == 0 {
+                    labelNode.xScale *= -1
                 }
                 labelNode.fontSize = 80
                 labelNode.position = CGPoint(x: 30, y: -30)
@@ -114,7 +117,7 @@ class MenuScene: SKScene {
         let levelCurrent = SKSpriteNode(imageNamed: allComplete ? "fruit_orange" : "fruit_yellow")
         levelCurrent.position = levelNodePoints[bestLevel - 1]
         if bestLevel % 2 == 0 {
-            levelCurrent.xScale = levelCurrent.xScale * -1
+            levelCurrent.xScale *= -1
             if !UIAccessibility.isReduceMotionEnabled { levelCurrent.run(
                 SKAction.repeatForever(
                     SKAction.sequence(
@@ -144,28 +147,28 @@ class MenuScene: SKScene {
         labelNode.fontColor = SKColor.white
         labelNode.fontSize = 80
         if bestLevel % 2 == 0 {
-            labelNode.xScale = labelNode.xScale * -1
+            labelNode.xScale *= -1
         }
         labelNode.position = CGPoint(x: 30, y: -30)
         levelCurrent.addChild(labelNode)
 
         // new levels
         if bestLevel < Constants.totalLevel {
-            for i in bestLevel + 1 ... Constants.totalLevel {
+            for levelNumber in bestLevel + 1 ... Constants.totalLevel {
                 let level = SKSpriteNode(imageNamed: "fruit_green")
-                level.position = levelNodePoints[i - 1]
-                if i % 2 == 0 {
-                    level.xScale = level.xScale * -1
+                level.position = levelNodePoints[levelNumber - 1]
+                if levelNumber % 2 == 0 {
+                    level.xScale *= -1
                 }
-                level.name = "level_\(i)"
+                level.name = "level_\(levelNumber)"
                 level.alpha = 0.55
                 moveableNode.addChild(level)
                 let labelNode = SKLabelNode(fontNamed: "Helvetica-Bold")
-                labelNode.text = "\(i)"
+                labelNode.text = "\(levelNumber)"
                 labelNode.fontColor = SKColor.white
                 labelNode.fontSize = 80
-                if i % 2 == 0 {
-                    labelNode.xScale = labelNode.xScale * -1
+                if levelNumber % 2 == 0 {
+                    labelNode.xScale *= -1
                 }
                 labelNode.position = CGPoint(x: 30, y: -30)
                 level.addChild(labelNode)

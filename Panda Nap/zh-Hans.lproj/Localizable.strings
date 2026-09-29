@@ -94,3 +94,15 @@
 "All levels complete!" = "全部关卡已完成！";
 "Explore or replay your favorite levels" = "探索或重玩你喜欢的关卡";
 "Replay any level" = "重玩任意关卡";
+"Privacy" = "隐私";
+"Privacy settings" = "隐私设置";
+"Privacy Policy" = "隐私政策";
+"Tracking is off" = "跟踪已关闭";
+"Ad choices" = "广告选择";
+"Ads are off" = "广告已关闭";
+"Tracking remains off. You can stop all ad requests here without changing iOS Settings." = "跟踪仍处于关闭状态。你可以在此停止所有广告请求，无需更改 iOS 设置。";
+"You can stop all ad requests here, including data shared for advertising." = "你可以在此停止所有广告请求，包括为投放广告而共享的数据。";
+"Panda Nap is not requesting ads. Tracking permission can be changed in iOS Settings." = "熊猫要午休不会请求广告。你可以在 iOS 设置中更改跟踪权限。";
+"Ads are off while tracking is denied in your region. Choose Stop ads to keep them off if that setting changes." = "在你所在地区，跟踪权限被拒绝时广告会关闭。选择「停止广告」后，即使该设置发生变化，广告也会保持关闭。";
+"Stop ads" = "停止广告";
+"OK" = "好";

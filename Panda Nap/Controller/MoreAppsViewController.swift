@@ -15,13 +15,11 @@ class MoreAppsViewController: UIViewController {
     var isAds: Bool = false
 
     #if !targetEnvironment(macCatalyst)
-        lazy var bannerView: BannerView = {
-            let bannerView = BannerView(adSize: AdSizeBanner)
-            bannerView.adUnitID = Constants.bannerAdUnitID
-            bannerView.rootViewController = self
-            bannerView.load(Request())
-            return bannerView
-        }()
+        private var privacyObserver: NSObjectProtocol?
+        private let adContainer = UIView()
+        private var bannerView: BannerView?
+        private lazy var bannerHeightConstraint = adContainer.heightAnchor.constraint(equalToConstant: 0)
+        private lazy var tableBottomGapConstraint = tableView.bottomAnchor.constraint(equalTo: adContainer.topAnchor)
 
         let appItems = [
             AppItem(
@@ -155,11 +153,11 @@ class MoreAppsViewController: UIViewController {
         ]
     #endif
 
-    lazy var backButton = UIButton(type: .custom).then { b in
-        b.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        b.tintColor = .label
-        b.accessibilityLabel = "Back".localized()
-        b.addTarget(self, action: #selector(backToHome), for: .touchUpInside)
+    lazy var backButton = UIButton(type: .custom).then { button in
+        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.tintColor = .label
+        button.accessibilityLabel = "Back".localized()
+        button.addTarget(self, action: #selector(backToHome), for: .touchUpInside)
     }
 
     lazy var titleLabel = UILabel().then { label in
@@ -195,8 +193,11 @@ class MoreAppsViewController: UIViewController {
         view.addSubview(tableView)
 
         #if !targetEnvironment(macCatalyst)
-            view.addSubview(bannerView)
-            bannerView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(adContainer)
+            adContainer.translatesAutoresizingMaskIntoConstraints = false
+            privacyObserver = NotificationCenter.default.addObserver(
+                forName: .adPrivacyDidChange, object: nil, queue: .main
+            ) { [weak self] _ in self?.refreshBanner() }
         #endif
 
         [backButton, titleLabel, tableView].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
@@ -215,15 +216,50 @@ class MoreAppsViewController: UIViewController {
         ]
         #if !targetEnvironment(macCatalyst)
             constraints += [
-                bannerView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-                bannerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                tableView.bottomAnchor.constraint(equalTo: bannerView.topAnchor, constant: -8)
+                adContainer.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+                adContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                adContainer.widthAnchor.constraint(equalToConstant: 320),
+                bannerHeightConstraint,
+                tableBottomGapConstraint
             ]
         #else
             constraints.append(tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor))
         #endif
         NSLayoutConstraint.activate(constraints)
+
+        #if !targetEnvironment(macCatalyst)
+        refreshBanner()
+        #endif
     }
+
+    #if !targetEnvironment(macCatalyst)
+    deinit {
+        if let privacyObserver { NotificationCenter.default.removeObserver(privacyObserver) }
+    }
+
+    private func refreshBanner() {
+        bannerView?.removeFromSuperview()
+        bannerView = nil
+        guard let request = AdPrivacyManager.shared.adRequest() else {
+            bannerHeightConstraint.constant = 0
+            tableBottomGapConstraint.constant = 0
+            return
+        }
+        bannerHeightConstraint.constant = 50
+        tableBottomGapConstraint.constant = -8
+        let banner = BannerView(adSize: AdSizeBanner)
+        banner.adUnitID = Constants.bannerAdUnitID
+        banner.rootViewController = self
+        banner.translatesAutoresizingMaskIntoConstraints = false
+        adContainer.addSubview(banner)
+        NSLayoutConstraint.activate([
+            banner.centerXAnchor.constraint(equalTo: adContainer.centerXAnchor),
+            banner.centerYAnchor.constraint(equalTo: adContainer.centerYAnchor)
+        ])
+        bannerView = banner
+        banner.load(request)
+    }
+    #endif
 }
 
 extension MoreAppsViewController {
@@ -243,11 +279,10 @@ extension MoreAppsViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MoreAppsHeaderCell", for: indexPath) as! MoreAppsHeaderCell
-            return cell
+            return tableView.dequeueReusableCell(withIdentifier: "MoreAppsHeaderCell", for: indexPath)
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "AppItemCell", for: indexPath) as! AppItemCell
-            cell.appItem = appItems[indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AppItemCell", for: indexPath)
+            (cell as? AppItemCell)?.appItem = appItems[indexPath.row]
             return cell
         }
     }

@@ -28,9 +28,9 @@ struct Constants {
     static let totalLevel = 13
 
     struct UserDefaultsKeys {
-        static let OPEN_COUNT = "OPEN_COUNT"
-        static let BEST_LEVEL = "BEST_LEVEL"
-        static let COMPLETED_LEVEL = "COMPLETED_LEVEL"
+        static let openCount = "OPEN_COUNT"
+        static let bestLevel = "BEST_LEVEL"
+        static let completedLevel = "COMPLETED_LEVEL"
     }
 
     static var isIphoneFaceID: Bool {

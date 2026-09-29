@@ -7,4 +7,4 @@
 */
 
 "CFBundleDisplayName" = "熊猫要午休";
-"NSUserTrackingUsageDescription" = "该标识符将用于向您投放个性化广告。";
+"NSUserTrackingUsageDescription" = "熊猫要午休使用您设备的广告标识符来帮助选择相关广告，例如决定“更多游戏”页面或关卡结束后显示哪则广告。";

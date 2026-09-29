@@ -7,4 +7,4 @@
 */
 
 "CFBundleDisplayName" = "Panda Nap";
-"NSUserTrackingUsageDescription" = "This identifier will be used to deliver personalized ads to you.";
+"NSUserTrackingUsageDescription" = "Panda Nap uses your device's advertising identifier to help choose relevant ads, for example, which ad appears on the More Apps screen or after a level ends.";
