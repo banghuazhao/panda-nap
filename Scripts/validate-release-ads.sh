@@ -1,6 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+if [[ "${EFFECTIVE_PLATFORM_NAME:-}" == "-maccatalyst" ]]; then
+    exit 0
+fi
+
 if [[ "${CONFIGURATION:-}" != "Release" ]]; then
     exit 0
 fi

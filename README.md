@@ -24,7 +24,7 @@ A delightful iOS puzzle game where you help a sleepy panda reach her bed by remo
 The panda is taking a nap, don't wake her up! In this physics-based puzzle game, you need to strategically remove obstacles so that the panda can fall smoothly onto her bed. The challenge is to ensure the panda doesn't fall to the ground, as that would wake her up and end the level.
 
 ### Key Features
-- **10 Challenging Levels**: Each level presents unique obstacle configurations
+- **13 Challenging Levels**: Includes three new remix challenges
 - **Physics-Based Gameplay**: Realistic physics simulation using SpriteKit
 - **Intuitive Touch Controls**: Simple tap-to-remove obstacle mechanics
 - **Progressive Difficulty**: Levels become more challenging as you advance
@@ -66,6 +66,7 @@ Localization, Auto Layout, menu scrolling, and view configuration now use first-
 
 - **iOS**: 13.0 or later
 - **Devices**: iPhone and iPad (Universal app)
+- **Mac**: macOS 10.15 or later through Mac Catalyst, with Intel and Apple silicon support
 - **Orientation**: Landscape mode only
 - **Xcode**: 16.0 or later (for development)
 
@@ -141,6 +142,8 @@ The game supports multiple languages:
 - **Chinese Traditional** (`zh-Hant.lproj`)
 
 ## 📊 Monetization
+
+Ads and their consent SDKs are included only in the iOS build. The Mac Catalyst build has no ads or tracking prompts.
 
 - **Banner Ads**: Displayed during gameplay
 - **Interstitial Ads**: Shown after losing multiple times

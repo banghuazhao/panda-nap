@@ -305,6 +305,7 @@
 				9963D90B249EF24700033FBD /* Sources */,
 				9963D90C249EF24700033FBD /* Frameworks */,
 				9963D90D249EF24700033FBD /* Resources */,
+				A50000000000000000000001 /* Prepare Mac Metadata */,
 			);
 			buildRules = (
 			);
@@ -398,6 +399,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A50000000000000000000001 /* Prepare Mac Metadata */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/en.lproj/InfoPlist.strings",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/zh-Hans.lproj/InfoPlist.strings",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/zh-Hant.lproj/InfoPlist.strings",
+			);
+			name = "Prepare Mac Metadata";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "/bin/bash \"${SRCROOT}/Scripts/prepare-mac-metadata.sh\"\n";
+		};
 		A30000000000000000000001 /* Validate Release AdMob IDs */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -624,6 +644,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.2.0;
+				"CURRENT_PROJECT_VERSION[sdk=macosx*]" = 4;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -651,6 +672,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.2.0;
+				"CURRENT_PROJECT_VERSION[sdk=macosx*]" = 4;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

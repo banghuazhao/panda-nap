@@ -105,7 +105,13 @@ private final class GameSettingsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard section == 1 else { return 3 }
+        guard section == 1 else {
+            #if targetEnvironment(macCatalyst)
+            return 2
+            #else
+            return 3
+            #endif
+        }
         #if !targetEnvironment(macCatalyst)
         return 2
         #else
