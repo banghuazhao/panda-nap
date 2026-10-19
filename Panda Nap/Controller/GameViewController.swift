@@ -41,6 +41,9 @@ class GameViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        #if targetEnvironment(macCatalyst)
+        becomeFirstResponder()
+        #endif
         #if !targetEnvironment(macCatalyst)
         AdPrivacyManager.shared.start(from: self)
         #endif
@@ -51,6 +54,11 @@ class GameViewController: UIViewController {
         scene.isPaused = true
         SKTAudio.sharedInstance().pauseBackgroundMusic()
         let settings = GameSettingsViewController(style: .insetGrouped)
+        settings.currentLevel = (scene as? GameScene)?.currentLevel
+        settings.allLevelsComplete = LevelProgress(
+            unlockedLevel: bestLevel,
+            completedLevel: UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.completedLevel),
+            totalLevels: Constants.totalLevel).allComplete
         settings.onClose = { [weak scene] in
             scene?.isPaused = false
             SKTAudio.sharedInstance().resumeBackgroundMusic()
@@ -61,6 +69,46 @@ class GameViewController: UIViewController {
         navigation.isModalInPresentation = true
         present(navigation, animated: true)
     }
+
+    #if targetEnvironment(macCatalyst)
+    override var canBecomeFirstResponder: Bool { true }
+
+    override var keyCommands: [UIKeyCommand]? {
+        guard presentedViewController == nil, let scene = (view as? SKView)?.scene else { return [] }
+        let commands: [(String, String, GameScene.Command)] = [
+            ("r", "Retry Level", .retry), ("l", "Show Levels", .levels),
+            ("s", "Settings", .settings), ("n", "Next Level", .next)
+        ]
+        return commands.compactMap { input, title, command in
+            if let game = scene as? GameScene {
+                guard game.canPerformCommand(command) else { return nil }
+            } else {
+                guard scene is MenuScene, !scene.isPaused, input == "s" else { return nil }
+            }
+            let key = UIKeyCommand(input: input, modifierFlags: [], action: #selector(handleGameCommand(_:)))
+            key.discoverabilityTitle = title.localized()
+            return key
+        }
+    }
+
+    @objc private func handleGameCommand(_ key: UIKeyCommand) {
+        guard presentedViewController == nil, let scene = (view as? SKView)?.scene else { return }
+        let command: GameScene.Command
+        switch key.input?.lowercased() {
+        case "r": command = .retry
+        case "l": command = .levels
+        case "s": command = .settings
+        case "n": command = .next
+        default: return
+        }
+        if let game = scene as? GameScene {
+            guard game.canPerformCommand(command) else { return }
+            game.performCommand(command)
+        } else if scene is MenuScene, !scene.isPaused, key.input?.lowercased() == "s" {
+            showSettings(for: scene)
+        }
+    }
+    #endif
 
     override var shouldAutorotate: Bool {
         return true
@@ -77,6 +125,17 @@ class GameViewController: UIViewController {
 
 private final class GameSettingsViewController: UITableViewController {
     var onClose: (() -> Void)?
+    var currentLevel: Int?
+    var allLevelsComplete = false
+
+    private var helpPages: [GameHelpViewController.Content] {
+        var pages: [GameHelpViewController.Content] = [.instructions]
+        if let currentLevel, let hint = LevelHint.text(for: currentLevel) {
+            pages.append(.hint(level: currentLevel, text: hint))
+        }
+        if allLevelsComplete { pages.append(.reward) }
+        return pages
+    }
     #if !targetEnvironment(macCatalyst)
     private var privacyObserver: NSObjectProtocol?
     #endif
@@ -106,7 +165,7 @@ private final class GameSettingsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 2 { return 1 }
+        if section == 2 { return helpPages.count }
         guard section == 1 else {
             #if targetEnvironment(macCatalyst)
             return 2
@@ -135,7 +194,9 @@ private final class GameSettingsViewController: UITableViewController {
         cell.textLabel?.adjustsFontForContentSizeCategory = true
         cell.textLabel?.numberOfLines = 0
         if indexPath.section == 2 {
-            cell.textLabel?.text = "How to Play".localized()
+            let pages = helpPages
+            guard pages.indices.contains(indexPath.row) else { return cell }
+            cell.textLabel?.text = pages[indexPath.row].title
             cell.accessoryType = .disclosureIndicator
             return cell
         }
@@ -160,7 +221,11 @@ private final class GameSettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 2 {
-            navigationController?.pushViewController(GameHelpViewController(), animated: true)
+            let pages = helpPages
+            guard pages.indices.contains(indexPath.row) else { return }
+            let help = GameHelpViewController()
+            help.content = pages[indexPath.row]
+            navigationController?.pushViewController(help, animated: true)
             return
         }
         guard indexPath.section == 1 else { return }
@@ -214,9 +279,25 @@ private final class GameSettingsViewController: UITableViewController {
 }
 
 private final class GameHelpViewController: UIViewController {
+    enum Content {
+        case instructions
+        case hint(level: Int, text: String)
+        case reward
+
+        var title: String {
+            switch self {
+            case .instructions: return "How to Play".localized()
+            case .hint(let level, _): return String(format: "Hint for Level %d".localized(), level)
+            case .reward: return "Nap Champion".localized()
+            }
+        }
+    }
+
+    var content: Content = .instructions
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "How to Play".localized()
+        title = content.title
         view.backgroundColor = .systemBackground
 
         let scrollView = UIScrollView()
@@ -229,26 +310,48 @@ private final class GameHelpViewController: UIViewController {
         instructions.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(instructions)
 
-        let sections = [
-            ("Reach the bed", "Help the sleepy panda land safely on her bed."),
-            ("Remove obstacles", "Tap obstacles to remove them. Choose the order carefully."),
-            ("Keep the panda steady", "The level ends if the panda falls to the ground or tilts too far."),
-            ("Try another approach", "Use Retry to restart the level, or Levels to choose an unlocked level.")
-        ]
+        var sections: [(String, String)]
+        switch content {
+        case .instructions:
+            sections = [
+                ("Reach the bed".localized(), "Help the sleepy panda land safely on her bed.".localized()),
+                ("Remove obstacles".localized(), "Tap obstacles to remove them. Choose the order carefully.".localized()),
+                ("Keep the panda steady".localized(), "The level ends if the panda falls to the ground or tilts too far.".localized()),
+                ("Try another approach".localized(), "Use Retry to restart the level, or Levels to choose an unlocked level.".localized())
+            ]
+            #if targetEnvironment(macCatalyst)
+            sections.append(("Keyboard controls".localized(),
+                             "On Mac, press R to retry, L for levels, S for settings, and N for the next level after a win.".localized()))
+            #endif
+        case .hint(_, let text):
+            sections = [("A gentle nudge".localized(), text),
+                        ("Try another approach".localized(), "Use Retry to restart the level, or Levels to choose an unlocked level.".localized())]
+        case .reward:
+            if let image = UIImage(named: "panda_sleep") {
+                let artwork = UIImageView(image: image)
+                artwork.contentMode = .scaleAspectFit
+                artwork.isAccessibilityElement = false
+                artwork.heightAnchor.constraint(equalToConstant: 160).isActive = true
+                instructions.addArrangedSubview(artwork)
+            }
+            sections = [("Sweet dreams, Panda!".localized(),
+                         String(format: "You guided Panda through all %d levels.".localized(), Constants.totalLevel)),
+                        ("Nap Champion".localized(), "Your bedtime postcard is always here. Replay a favorite level whenever you like.".localized())]
+        }
         for (heading, detail) in sections {
             let section = UIStackView()
             section.axis = .vertical
             section.spacing = 8
 
             let headingLabel = UILabel()
-            headingLabel.text = heading.localized()
+            headingLabel.text = heading
             headingLabel.font = .preferredFont(forTextStyle: .headline)
             headingLabel.adjustsFontForContentSizeCategory = true
             headingLabel.numberOfLines = 0
             headingLabel.accessibilityTraits.insert(.header)
 
             let detailLabel = UILabel()
-            detailLabel.text = detail.localized()
+            detailLabel.text = detail
             detailLabel.font = .preferredFont(forTextStyle: .body)
             detailLabel.adjustsFontForContentSizeCategory = true
             detailLabel.numberOfLines = 0

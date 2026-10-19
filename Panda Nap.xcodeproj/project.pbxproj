@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9BC405FC3F2C4A9291537DF8 /* Level16.sks in Resources */ = {isa = PBXBuildFile; fileRef = 054BFC04233244FBA4DD1645 /* Level16.sks */; };
+		CEF0D1EA6D45438CAC93D6C2 /* Level15.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7822FA20F04F4F4081303EE9 /* Level15.sks */; };
+		E5894C490C494F3F82A5D4EB /* Level14.sks in Resources */ = {isa = PBXBuildFile; fileRef = B3FBCFFADF25425E8CA9B18B /* Level14.sks */; };
+		ABE59016E8A44566B607922C /* LevelHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAED0D98A094BD790E7C274 /* LevelHint.swift */; };
+		5DA38E2B92DD41E496280855 /* LevelRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F63B7D6062A4B788524AEA7 /* LevelRecordStore.swift */; };
 		82154AD70C0E406BB4179908 /* LevelProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5ED0D080624D90AD96C23D /* LevelProgress.swift */; };
 		A40000000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000002 /* PrivacyInfo.xcprivacy */; };
 		995D076024A62B6A00C2C115 /* oboarding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 995D075F24A62B6A00C2C115 /* oboarding.mp3 */; };
@@ -71,6 +76,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		054BFC04233244FBA4DD1645 /* Level16.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level16.sks; sourceTree = "<group>"; };
+		7822FA20F04F4F4081303EE9 /* Level15.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level15.sks; sourceTree = "<group>"; };
+		B3FBCFFADF25425E8CA9B18B /* Level14.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level14.sks; sourceTree = "<group>"; };
+		0AAED0D98A094BD790E7C274 /* LevelHint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelHint.swift; sourceTree = "<group>"; };
+		3F63B7D6062A4B788524AEA7 /* LevelRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelRecordStore.swift; sourceTree = "<group>"; };
 		1B5ED0D080624D90AD96C23D /* LevelProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelProgress.swift; sourceTree = "<group>"; };
 		A40000000000000000000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		995D075F24A62B6A00C2C115 /* oboarding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = oboarding.mp3; sourceTree = "<group>"; };
@@ -198,6 +208,7 @@
 		9963D92A249EF2E900033FBD /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				0AAED0D98A094BD790E7C274 /* LevelHint.swift */,
 				9963D954249F5DBC00033FBD /* SKTUtils */,
 				9963D92B249EF2E900033FBD /* Constants.swift */,
 				A30000000000000000000003 /* AdPrivacyManager.swift */,
@@ -213,6 +224,9 @@
 		9963D94C249EF2FF00033FBD /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				054BFC04233244FBA4DD1645 /* Level16.sks */,
+				7822FA20F04F4F4081303EE9 /* Level15.sks */,
+				B3FBCFFADF25425E8CA9B18B /* Level14.sks */,
 				9963D914249EF24800033FBD /* Level1.sks */,
 				995D076124A6375200C2C115 /* Level2.sks */,
 				9963D991249F9F7B00033FBD /* Level3.sks */,
@@ -258,6 +272,7 @@
 		9963D94F249F5A4400033FBD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3F63B7D6062A4B788524AEA7 /* LevelRecordStore.swift */,
 				1B5ED0D080624D90AD96C23D /* LevelProgress.swift */,
 				9963D950249F5A5F00033FBD /* BedNode.swift */,
 				9963D952249F5AFB00033FBD /* PandaNode.swift */,
@@ -370,6 +385,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BC405FC3F2C4A9291537DF8 /* Level16.sks in Resources */,
+				CEF0D1EA6D45438CAC93D6C2 /* Level15.sks in Resources */,
+				E5894C490C494F3F82A5D4EB /* Level14.sks in Resources */,
 				995D076924A6398200C2C115 /* Level5.sks in Resources */,
 				9963D91E249EF24800033FBD /* Main.storyboard in Resources */,
 				9963D98A249F936E00033FBD /* background.mp3 in Resources */,
@@ -443,6 +461,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABE59016E8A44566B607922C /* LevelHint.swift in Sources */,
+				5DA38E2B92DD41E496280855 /* LevelRecordStore.swift in Sources */,
 				A30000000000000000000002 /* AdPrivacyManager.swift in Sources */,
 				9963D919249EF24800033FBD /* GameScene.swift in Sources */,
 				9963D986249F641F00033FBD /* BlockNode.swift in Sources */,

@@ -23,6 +23,7 @@ protocol InteractiveNode {
 private var consecutiveLosses = 0
 
 class GameScene: SKScene {
+    enum Command { case retry, levels, settings, next }
     #if !targetEnvironment(macCatalyst)
     private var interstitialAd: InterstitialAd?
     private var privacyObserver: NSObjectProtocol?
@@ -33,18 +34,57 @@ class GameScene: SKScene {
     private var retryButton: SKShapeNode?
     private var settingsButton: SKShapeNode?
     private var levelBadge: SKShapeNode?
+    private var removalsBadge: SKShapeNode?
+    private var bestBadge: SKShapeNode?
     private var hintNode: SKShapeNode?
     private var tutorialTarget: SKNode?
     private var tutorialHalo: SKShapeNode?
     private var resultCard: MessageNode?
     private var resultActionHandled = false
     private var won = false
+    private var isTransitioning = false
+    private(set) var removalCount = 0
     private var pointScale: CGFloat = 1
 
     var bedNode: BedNode!
     var pandaNode: PandaNode!
     var playable = true
     var currentLevel = 0
+
+    var acceptsGameplayInput: Bool {
+        playable && !isPaused && !isTransitioning && view?.scene === self
+            && view?.window?.rootViewController?.presentedViewController == nil
+    }
+
+    func canPerformCommand(_ command: Command) -> Bool {
+        guard !isPaused, !isTransitioning, view?.scene === self,
+              view?.window?.rootViewController?.presentedViewController == nil else { return false }
+        if resultCard != nil {
+            guard !resultActionHandled else { return false }
+            switch command {
+            case .retry, .levels: return true
+            case .next: return won && currentLevel < Constants.totalLevel
+            case .settings: return false
+            }
+        }
+        return playable && command != .next
+    }
+
+    /// Touch and keyboard input share the same state and transition guards.
+    func performCommand(_ command: Command) {
+        guard canPerformCommand(command) else { return }
+        let fromResult = resultCard != nil
+        if fromResult { resultActionHandled = true }
+        lightHaptic()
+        switch command {
+        case .retry:
+            if fromResult { retryLevel() } else { newGame() }
+        case .levels: showLevels()
+        case .next: advanceToNextLevel()
+        case .settings:
+            (view?.window?.rootViewController as? GameViewController)?.showSettings(for: self)
+        }
+    }
 
     override func didMove(to view: SKView) {
         let maxAspectRatio: CGFloat = 2.2
@@ -114,7 +154,12 @@ class GameScene: SKScene {
         levelBadge = pill(String(format: "Level %d".localized(), currentLevel), name: "levelBadge",
                           width: 108, height: 35,
                           fill: SKColor(red: 0.10, green: 0.25, blue: 0.16, alpha: 0.88))
-        [levelsButton, retryButton, settingsButton, levelBadge].compactMap { $0 }.forEach(hud.addChild)
+        let recordFill = SKColor(red: 0.10, green: 0.25, blue: 0.16, alpha: 0.88)
+        removalsBadge = pill("", name: "removals", width: 100, height: 35, fill: recordFill)
+        bestBadge = pill("", name: "best", width: 100, height: 35, fill: recordFill)
+        [levelsButton, retryButton, settingsButton, levelBadge, removalsBadge, bestBadge]
+            .compactMap { $0 }.forEach(hud.addChild)
+        updateRemovalHUD()
 
         if currentLevel == 1 && !GameSettings.tutorialCompleted {
             hintNode = pill("Tap blocks to guide the panda".localized(), name: "hint",
@@ -136,7 +181,7 @@ class GameScene: SKScene {
 
         let label = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
         label.text = title
-        label.fontSize = name == "hint" ? 14 : (name == "levelBadge" ? 16 : 18)
+        label.fontSize = ["hint", "removals", "best"].contains(name) ? 14 : (name == "levelBadge" ? 16 : 18)
         label.fontColor = .white
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
@@ -163,6 +208,10 @@ class GameScene: SKScene {
         settingsButton.position = CGPoint(x: frame.midX, y: top)
         levelBadge.setScale(pointScale)
         levelBadge.position = CGPoint(x: levelsButton.position.x, y: top - 54 * pointScale)
+        removalsBadge?.setScale(pointScale)
+        removalsBadge?.position = CGPoint(x: right - 50 * pointScale, y: top - 54 * pointScale)
+        bestBadge?.setScale(pointScale)
+        bestBadge?.position = CGPoint(x: right - 50 * pointScale, y: top - 95 * pointScale)
 
         layoutTutorial()
     }
@@ -205,7 +254,7 @@ class GameScene: SKScene {
     }
 
     override func didSimulatePhysics() {
-        if playable && abs(pandaNode.zRotation) > CGFloat(45).degreesToRadians() {
+        if playable && !isTransitioning && abs(pandaNode.zRotation) > CGFloat(45).degreesToRadians() {
             lose()
         }
     }
@@ -213,39 +262,36 @@ class GameScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let location = touches.first?.location(in: self) else { return }
         if let resultCard {
-            guard !resultActionHandled,
-                  let choice = resultCard.choice(at: location, in: self) else { return }
-            resultActionHandled = true
-            lightHaptic()
+            guard let choice = resultCard.choice(at: location, in: self) else { return }
             switch choice {
-            case .next: advanceToNextLevel()
-            case .retry: retryLevel()
-            case .levels: showLevels()
+            case .next: performCommand(.next)
+            case .retry: performCommand(.retry)
+            case .levels: performCommand(.levels)
             }
             return
         }
         if levelsButton?.calculateAccumulatedFrame().contains(location) == true {
-            lightHaptic()
-            showLevels()
+            performCommand(.levels)
         } else if retryButton?.calculateAccumulatedFrame().contains(location) == true {
-            lightHaptic()
-            newGame()
+            performCommand(.retry)
         } else if settingsButton?.calculateAccumulatedFrame().contains(location) == true {
-            lightHaptic()
-            (view?.window?.rootViewController as? GameViewController)?.showSettings(for: self)
+            performCommand(.settings)
         }
     }
 
     private func showLevels() {
+        guard !isTransitioning, let view, view.scene === self,
+              let menu = SKScene(fileNamed: "MenuScene") as? MenuScene else { return }
+        isTransitioning = true
         consecutiveLosses = 0
-        if let menu = SKScene(fileNamed: "MenuScene") as? MenuScene {
-            menu.scaleMode = .aspectFill
-            view?.presentScene(menu, transition: .fade(withDuration: 0.25))
-        }
+        menu.scaleMode = .aspectFill
+        view.presentScene(menu, transition: .fade(withDuration: 0.25))
     }
 
     func blockRemoved(at point: CGPoint, stone: Bool) {
-        guard playable else { return }
+        guard acceptsGameplayInput else { return }
+        if removalCount < Int.max { removalCount += 1 }
+        updateRemovalHUD()
         if currentLevel == 1 { GameSettings.tutorialCompleted = true }
         hintNode?.removeAllActions()
         hintNode?.run(.sequence([.fadeOut(withDuration: 0.12), .removeFromParent()]))
@@ -257,6 +303,13 @@ class GameScene: SKScene {
         burst(at: point, color: stone ? .lightGray : SKColor(red: 0.58, green: 0.35, blue: 0.16, alpha: 1),
               count: stone ? 10 : 7, distance: 46)
         lightHaptic()
+    }
+
+    private func updateRemovalHUD() {
+        (removalsBadge?.children.first as? SKLabelNode)?.text = String(
+            format: "Removed: %d".localized(), removalCount)
+        (bestBadge?.children.first as? SKLabelNode)?.text = LevelRecordStore.bestRemovals(for: currentLevel)
+            .map { String(format: "Best: %d".localized(), $0) } ?? "No best yet".localized()
     }
 
     private func burst(at point: CGPoint, color: SKColor, count: Int, distance: CGFloat) {
@@ -292,14 +345,14 @@ class GameScene: SKScene {
         #endif
     }
 
-    private func showResult(_ title: String, detail: String, won: Bool) {
+    private func showResult(_ title: String, detail: String, won: Bool, statistics: String? = nil) {
         let backdrop = SKSpriteNode(color: SKColor.black.withAlphaComponent(0.36), size: size)
         backdrop.position = CGPoint(x: frame.midX, y: frame.midY)
         backdrop.zPosition = 190
         addChild(backdrop)
         let message = MessageNode(message: title, detail: detail, won: won,
                                   finalLevel: won && currentLevel == Constants.totalLevel,
-                                  pointScale: pointScale)
+                                  pointScale: pointScale, statistics: statistics)
         message.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(message)
         resultCard = message
@@ -307,18 +360,20 @@ class GameScene: SKScene {
     }
 
     func newGame() {
-        if let nextScene = GameScene.level(levelNum: currentLevel) {
-            view?.presentScene(nextScene, transition: .fade(withDuration: 0.25))
-        }
+        presentLevel(currentLevel)
+    }
+
+    private func presentLevel(_ level: Int) {
+        guard !isTransitioning, let view, view.scene === self,
+              let nextScene = GameScene.level(levelNum: level) else { return }
+        isTransitioning = true
+        view.presentScene(nextScene, transition: .fade(withDuration: 0.25))
     }
 
     private func advanceToNextLevel() {
         guard won else { return }
         guard currentLevel < Constants.totalLevel else { showLevels(); return }
-        let next = currentLevel + 1
-        if let nextScene = GameScene.level(levelNum: next) {
-            view?.presentScene(nextScene, transition: .fade(withDuration: 0.25))
-        }
+        presentLevel(currentLevel + 1)
     }
 
     private func retryLevel() {
@@ -337,7 +392,7 @@ class GameScene: SKScene {
     }
 
     func lose() {
-        guard playable else { return }
+        guard playable, !isTransitioning else { return }
         playable = false
         SKTAudio.sharedInstance().pauseBackgroundMusic()
         SKTAudio.sharedInstance().playSoundEffect("lose.mp3")
@@ -351,9 +406,11 @@ class GameScene: SKScene {
     }
 
     func win() {
-        guard playable else { return }
+        guard playable, !isTransitioning else { return }
         playable = false
         won = true
+        let newBest = LevelRecordStore.recordWin(level: currentLevel, removals: removalCount)
+        updateRemovalHUD()
         let completed = UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.completedLevel)
         if currentLevel > completed {
             UserDefaults.standard.set(currentLevel, forKey: Constants.UserDefaultsKeys.completedLevel)
@@ -370,13 +427,18 @@ class GameScene: SKScene {
               count: 24, distance: 105)
         resultHaptic(success: true)
         let finished = currentLevel == Constants.totalLevel
-        showResult(finished ? "All levels complete!".localized() : "Nice job!".localized(),
-                   detail: finished ? "Explore or replay your favorite levels".localized()
-                                    : "Choose what to do next".localized(), won: true)
+        let statistics = String(format: "%d removals • Best: %d".localized(), removalCount,
+                                LevelRecordStore.bestRemovals(for: currentLevel) ?? removalCount)
+        showResult(finished ? "Nap Champion".localized()
+                            : (newBest ? "New personal best!" : "Nice job!").localized(),
+                   detail: finished ? "Sweet dreams, Panda!".localized()
+                                    : "Choose what to do next".localized(),
+                   won: true, statistics: statistics)
     }
 
     class func level(levelNum: Int) -> GameScene? {
-        guard let scene = GameScene(fileNamed: "Level\(levelNum)") else { return nil }
+        guard (1...Constants.totalLevel).contains(levelNum),
+              let scene = GameScene(fileNamed: "Level\(levelNum)") else { return nil }
         scene.currentLevel = levelNum
         if levelNum > bestLevel {
             bestLevel = levelNum
@@ -403,7 +465,7 @@ extension GameScene: FullScreenContentDelegate {
 
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
-        guard playable else { return }
+        guard playable, !isTransitioning else { return }
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         if collision == (PhysicsCategory.Panda | PhysicsCategory.Bed) {
             win()

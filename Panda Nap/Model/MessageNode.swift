@@ -11,10 +11,11 @@ final class MessageNode: SKNode {
     private var buttons: [(choice: Choice, node: SKShapeNode)] = []
 
     init(message: String, detail: String, won: Bool, finalLevel: Bool = false,
-         pointScale: CGFloat) {
+         pointScale: CGFloat, statistics: String? = nil) {
         super.init()
 
-        let cardSize = CGSize(width: 378 * pointScale, height: 174 * pointScale)
+        let cardHeight: CGFloat = finalLevel ? 286 : (statistics == nil ? 174 : 210)
+        let cardSize = CGSize(width: 378 * pointScale, height: cardHeight * pointScale)
         let card = SKShapeNode(rectOf: cardSize, cornerRadius: 22 * pointScale)
         card.fillColor = SKColor(red: 0.10, green: 0.23, blue: 0.16, alpha: 0.97)
         card.strokeColor = SKColor(red: 0.71, green: 0.91, blue: 0.39, alpha: 1)
@@ -26,7 +27,8 @@ final class MessageNode: SKNode {
         title.fontSize = 27 * pointScale
         title.fontColor = .white
         title.verticalAlignmentMode = .center
-        title.position.y = 46 * pointScale
+        title.position.y = (finalLevel ? 110 : (statistics == nil ? 46 : 65)) * pointScale
+        title.fontSize = min(title.fontSize, 340 * pointScale / max(title.frame.width, 1) * title.fontSize)
         addChild(title)
 
         let subtitle = SKLabelNode(fontNamed: "AvenirNext-Medium")
@@ -34,8 +36,33 @@ final class MessageNode: SKNode {
         subtitle.fontSize = 15 * pointScale
         subtitle.fontColor = SKColor(red: 0.84, green: 0.95, blue: 0.73, alpha: 1)
         subtitle.verticalAlignmentMode = .center
-        subtitle.position.y = 12 * pointScale
+        subtitle.position.y = (finalLevel ? 78 : (statistics == nil ? 12 : 33)) * pointScale
         addChild(subtitle)
+
+        if finalLevel {
+            let sleepingPanda = SKSpriteNode(imageNamed: "panda_sleep")
+            let aspect = sleepingPanda.size.width / max(sleepingPanda.size.height, 1)
+            sleepingPanda.size = CGSize(width: 70 * aspect * pointScale, height: 70 * pointScale)
+            sleepingPanda.position.y = 24 * pointScale
+            addChild(sleepingPanda)
+            let achievement = SKLabelNode(fontNamed: "AvenirNext-Medium")
+            achievement.text = String(format: "You guided Panda through all %d levels.".localized(), Constants.totalLevel)
+            achievement.fontSize = 14 * pointScale
+            achievement.fontColor = .white
+            achievement.verticalAlignmentMode = .center
+            achievement.position.y = -28 * pointScale
+            addChild(achievement)
+        }
+
+        if let statistics {
+            let record = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
+            record.text = statistics
+            record.fontSize = 14 * pointScale
+            record.fontColor = .white
+            record.verticalAlignmentMode = .center
+            record.position.y = (finalLevel ? -54 : 2) * pointScale
+            addChild(record)
+        }
 
         let choices: [(Choice, String)]
         if finalLevel {
@@ -56,7 +83,8 @@ final class MessageNode: SKNode {
                 : SKColor(red: 0.20, green: 0.39, blue: 0.26, alpha: 1)
             button.strokeColor = SKColor(red: 0.73, green: 0.89, blue: 0.56, alpha: 1)
             button.lineWidth = 1.5 * pointScale
-            button.position = CGPoint(x: firstX + CGFloat(index) * spacing, y: -48 * pointScale)
+            let buttonY: CGFloat = finalLevel ? -104 : (statistics == nil ? -48 : -63)
+            button.position = CGPoint(x: firstX + CGFloat(index) * spacing, y: buttonY * pointScale)
             let label = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
             label.text = choice.1
             label.fontSize = 15 * pointScale

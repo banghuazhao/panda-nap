@@ -26,11 +26,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         #endif
 
-        if let previousBestLevel = UserDefaults.standard.value(forKey: Constants.UserDefaultsKeys.bestLevel) as? Int {
-            bestLevel = min(max(previousBestLevel, 1), Constants.totalLevel)
-            print("bestLevel: \(bestLevel)")
-        } else {
-            UserDefaults.standard.set(1, forKey: Constants.UserDefaultsKeys.bestLevel)
+        let defaults = UserDefaults.standard
+        let savedBestLevel = defaults.object(forKey: Constants.UserDefaultsKeys.bestLevel) as? Int
+        let savedCompletedLevel = defaults.integer(forKey: Constants.UserDefaultsKeys.completedLevel)
+        let progress = LevelProgress(unlockedLevel: savedBestLevel ?? 1,
+                                     completedLevel: savedCompletedLevel,
+                                     totalLevels: Constants.totalLevel)
+        bestLevel = progress.unlockedLevel
+        // Keep saves from a newer release intact when running a version with
+        // fewer levels. Runtime access still uses the clamped snapshot above.
+        if (savedBestLevel ?? 1) <= Constants.totalLevel {
+            if savedBestLevel != progress.unlockedLevel {
+                defaults.set(progress.unlockedLevel, forKey: Constants.UserDefaultsKeys.bestLevel)
+            }
+            if savedCompletedLevel != progress.completedLevels {
+                defaults.set(progress.completedLevels, forKey: Constants.UserDefaultsKeys.completedLevel)
+            }
         }
 
         StoreReviewHelper.incrementOpenCount()

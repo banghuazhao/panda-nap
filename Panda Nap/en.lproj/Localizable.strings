@@ -55,3 +55,38 @@
 "The level ends if the panda falls to the ground or tilts too far." = "The level ends if the panda falls to the ground or tilts too far.";
 "Try another approach" = "Try another approach";
 "Use Retry to restart the level, or Levels to choose an unlocked level." = "Use Retry to restart the level, or Levels to choose an unlocked level.";
+
+/* Replay challenges, hints, and completion reward */
+"Removed: %d" = "Removed: %d";
+"Best: %d" = "Best: %d";
+"No best yet" = "No best yet";
+"%d removals • Best: %d" = "%d removals • Best: %d";
+"New personal best!" = "New personal best!";
+"Sweet dreams, Panda!" = "Sweet dreams, Panda!";
+"You guided Panda through all %d levels." = "You guided Panda through all %d levels.";
+"Nap Champion" = "Nap Champion";
+"Your bedtime postcard is always here. Replay a favorite level whenever you like." = "Your bedtime postcard is always here. Replay a favorite level whenever you like.";
+"Hint for Level %d" = "Hint for Level %d";
+"A gentle nudge" = "A gentle nudge";
+"Retry Level" = "Retry Level";
+"Show Levels" = "Show Levels";
+"Keyboard controls" = "Keyboard controls";
+"On Mac, press R to retry, L for levels, S for settings, and N for the next level after a win." = "On Mac, press R to retry, L for levels, S for settings, and N for the next level after a win.";
+
+/* Authored level hints */
+"Panda starts above the bed. Clear the wooden layers without tipping her sideways." = "Panda starts above the bed. Clear the wooden layers without tipping her sideways.";
+"The wide top plank rests on two sides. Keep its support balanced as you open the middle." = "The wide top plank rests on two sides. Keep its support balanced as you open the middle.";
+"Panda is above the left side of a wide structure. Focus on the path beneath her rather than clearing every block." = "Panda is above the left side of a wide structure. Focus on the path beneath her rather than clearing every block.";
+"Panda starts to the right of the bed. Think about how the overlapping planks can bring her toward the center." = "Panda starts to the right of the bed. Think about how the overlapping planks can bring her toward the center.";
+"The square blocks form an offset stack. Removing a lower block changes the balance of everything above it." = "The square blocks form an offset stack. Removing a lower block changes the balance of everything above it.";
+"Panda starts on the left. The two narrow supports under her top block can change which way she leans." = "Panda starts on the left. The two narrow supports under her top block can change which way she leans.";
+"Panda rests on the high right plank. The lower planks can help her descend toward the bed." = "Panda rests on the high right plank. The lower planks can help her descend toward the bed.";
+"The top block rests on upright planks. Watch how removing one support changes the block's balance." = "The top block rests on upright planks. Watch how removing one support changes the block's balance.";
+"Panda starts far to the left of the bed. A straight drop may miss; use the supporting plank to guide her inward." = "Panda starts far to the left of the bed. A straight drop may miss; use the supporting plank to guide her inward.";
+"The gray stone pieces move as one structure. Clear a landing path before removing that support." = "The gray stone pieces move as one structure. Clear a landing path before removing that support.";
+"Panda starts on the right. Compare the two narrow supports before choosing which side to release." = "Panda starts on the right. Compare the two narrow supports before choosing which side to release.";
+"Panda rests on the high left plank. Use the lower planks to guide her toward the bed." = "Panda rests on the high left plank. Use the lower planks to guide her toward the bed.";
+"Panda starts far to the right of the bed. Think about the direction the long plank will tilt." = "Panda starts far to the right of the bed. Think about the direction the long plank will tilt.";
+"Clear the wooden block above the bed, then remove the top plank." = "Clear the wooden block above the bed, then remove the top plank.";
+"Clear the center block, then remove the upper plank. Let Panda settle before removing the lower plank." = "Clear the center block, then remove the upper plank. Let Panda settle before removing the lower plank.";
+"Clear the wooden blocks above the bed first. The stone bridge disappears as one piece when tapped." = "Clear the wooden blocks above the bed first. The stone bridge disappears as one piece when tapped.";

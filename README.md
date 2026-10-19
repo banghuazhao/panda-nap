@@ -24,7 +24,7 @@ A delightful iOS puzzle game where you help a sleepy panda reach her bed by remo
 The panda is taking a nap, don't wake her up! In this physics-based puzzle game, you need to strategically remove obstacles so that the panda can fall smoothly onto her bed. The challenge is to ensure the panda doesn't fall to the ground, as that would wake her up and end the level.
 
 ### Key Features
-- **13 Challenging Levels**: Includes three new remix challenges
+- **16 Challenging Levels**: Includes three remix challenges and three handcrafted bonus puzzles
 - **Physics-Based Gameplay**: Realistic physics simulation using SpriteKit
 - **Intuitive Touch Controls**: Simple tap-to-remove obstacle mechanics
 - **Progressive Difficulty**: Levels become more challenging as you advance
@@ -33,6 +33,10 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 - **Quick Continue**: Open the highest unlocked level directly from the map
 - **Clear Progress**: Completion counter, checkmarks, and lock icons on the level map
 - **Help Anytime**: Revisit the controls and rules through Settings → How to Play
+- **Optional Level Hints**: Ask for a gentle nudge in Settings while a puzzle is paused
+- **Personal Bests**: Track removals and beat your best winning count on each level
+- **Completion Postcard**: Earn the Nap Champion reward after finishing all 16 levels
+- **Mac Keyboard Controls**: R to retry, L for levels, S for settings, and N for the next level after a win
 - **Multi-language Support**: Available in English and Chinese (Simplified & Traditional)
 
 ## 🎯 How to Play
@@ -46,7 +50,9 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 
 The first level highlights a removable block until you make your first move. Open **Settings** from the level map or a level to adjust music, sound effects, and haptics.
 
-Choose **Continue: Level N** on the map to start the highest unlocked puzzle. After completing all 13 levels, **Replay Levels** scrolls the map back to the first level so you can choose a favorite. Settings → **How to Play** explains the rules without resetting your tutorial or progress; gameplay stays paused until you close Settings.
+Choose **Continue: Level N** on the map to start the highest unlocked puzzle. After completing all 16 levels, **Replay Levels** scrolls the map back to the first level so you can choose a favorite. Settings → **How to Play** explains the rules without resetting your tutorial or progress; gameplay stays paused until you close Settings. While playing, Settings also offers an optional hint for the current level.
+
+Each removable block counts once; the connected stone structure counts as one removal. Personal bests update only after a win, and Retry resets the current attempt's count. Completing all 16 levels earns a bedtime postcard that you can revisit in Settings. Players who completed the earlier 13-level release keep that progress and immediately unlock Level 14.
 
 ## 🛠 Technical Details
 
@@ -111,7 +117,15 @@ Run this from the repository root to check fresh installs, older saves, invalid 
 ```bash
 swiftc 'Panda Nap/Model/LevelProgress.swift' Scripts/validate-level-progress.swift -o /tmp/panda-progress-check
 /tmp/panda-progress-check
+swiftc 'Panda Nap/Model/LevelRecordStore.swift' Scripts/validate-level-records.swift -o /tmp/panda-record-check
+/tmp/panda-record-check
+swiftc -parse-as-library Scripts/validate-bonus-levels.swift -o /tmp/panda-bonus-check -framework SpriteKit -framework Metal
+/tmp/panda-bonus-check
 ```
+
+The bonus scenes are authored by `tools/generate_bonus_levels.py`. Their solution sequences and tap timings are recorded in `tools/bonus_level_solutions.json`; regenerate scenes only when intentionally changing their layouts. Check each sequence in SpriteKit before shipping level edits.
+
+The native macOS bonus check uses offscreen Metal and real SpriteKit physics at 60 and 120 Hz. It verifies motion, all planned removals, safe rotation, and contact with the bed. It needs access to the Mac's Metal device.
 
 ## 📁 Project Structure
 

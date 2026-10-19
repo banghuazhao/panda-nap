@@ -20,7 +20,7 @@ class StoneNode: SKSpriteNode, EventListenerNode, InteractiveNode {
   }
   
   func interact() {
-    guard let game = scene as? GameScene, game.playable, isUserInteractionEnabled else { return }
+    guard let game = scene as? GameScene, game.acceptsGameplayInput, isUserInteractionEnabled else { return }
     isUserInteractionEnabled = false
     let center = children.isEmpty ? CGPoint.zero : CGPoint(
       x: children.map(\.position.x).reduce(0, +) / CGFloat(children.count),

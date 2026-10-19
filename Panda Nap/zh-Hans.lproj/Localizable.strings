@@ -121,3 +121,38 @@
 "The level ends if the panda falls to the ground or tilts too far." = "如果熊猫掉到地上或倾斜过大，本关就会结束。";
 "Try another approach" = "尝试其他方法";
 "Use Retry to restart the level, or Levels to choose an unlocked level." = "点击「重试」重新开始本关，或点击「关卡」选择已解锁的关卡。";
+
+/* Replay challenges, hints, and completion reward */
+"Removed: %d" = "已移除：%d";
+"Best: %d" = "最佳：%d";
+"No best yet" = "暂无纪录";
+"%d removals • Best: %d" = "%d 次移除 • 最佳：%d";
+"New personal best!" = "刷新最佳纪录！";
+"Sweet dreams, Panda!" = "好梦，熊猫！";
+"You guided Panda through all %d levels." = "你帮助熊猫完成了全部 %d 个关卡。";
+"Nap Champion" = "午睡冠军";
+"Your bedtime postcard is always here. Replay a favorite level whenever you like." = "你的睡前纪念卡会一直保存在这里。随时回来重玩喜欢的关卡吧。";
+"Hint for Level %d" = "第 %d 关提示";
+"A gentle nudge" = "小提示";
+"Retry Level" = "重试本关";
+"Show Levels" = "显示关卡";
+"Keyboard controls" = "键盘操作";
+"On Mac, press R to retry, L for levels, S for settings, and N for the next level after a win." = "在 Mac 上，按 R 重试、L 查看关卡、S 打开设置；胜利后按 N 进入下一关。";
+
+/* Authored level hints */
+"Panda starts above the bed. Clear the wooden layers without tipping her sideways." = "熊猫就在床的上方。移除一层层木块时，尽量不要让她向两侧倾斜。";
+"The wide top plank rests on two sides. Keep its support balanced as you open the middle." = "顶部的宽木板由两侧支撑。清理中间的通道时，注意保持支撑平衡。";
+"Panda is above the left side of a wide structure. Focus on the path beneath her rather than clearing every block." = "熊猫位于整个宽支架的左上方。重点清理她下方的通道，不必移除所有木块。";
+"Panda starts to the right of the bed. Think about how the overlapping planks can bring her toward the center." = "熊猫从床的右上方出发。想一想，交叠的木板怎样才能把她引向中间。";
+"The square blocks form an offset stack. Removing a lower block changes the balance of everything above it." = "方块错位堆叠在一起。移除下层方块会改变上方所有物体的平衡。";
+"Panda starts on the left. The two narrow supports under her top block can change which way she leans." = "熊猫从左侧出发。顶部方块下的两根窄支柱会影响她倾斜的方向。";
+"Panda rests on the high right plank. The lower planks can help her descend toward the bed." = "熊猫在右侧较高的木板上。下方的木板可以帮助她朝床的方向下降。";
+"The top block rests on upright planks. Watch how removing one support changes the block's balance." = "顶部方块由竖直木板支撑。留意移除一侧支撑后，方块的平衡会怎样变化。";
+"Panda starts far to the left of the bed. A straight drop may miss; use the supporting plank to guide her inward." = "熊猫离床的左侧很远。直接落下可能会错过床，试着用支撑木板引导她向中间移动。";
+"The gray stone pieces move as one structure. Clear a landing path before removing that support." = "灰色石块会作为一个整体移动。移除这组支撑前，先清理好落向床的通道。";
+"Panda starts on the right. Compare the two narrow supports before choosing which side to release." = "熊猫从右侧出发。先比较两根窄支柱，再决定从哪一侧开始移除。";
+"Panda rests on the high left plank. Use the lower planks to guide her toward the bed." = "熊猫在左侧较高的木板上。利用下方木板引导她朝床的方向移动。";
+"Panda starts far to the right of the bed. Think about the direction the long plank will tilt." = "熊猫离床的右侧很远。想一想，长木板会朝哪个方向倾斜。";
+"Clear the wooden block above the bed, then remove the top plank." = "先移除床上方的木块，再移除顶部木板。";
+"Clear the center block, then remove the upper plank. Let Panda settle before removing the lower plank." = "先移除中间的木块，再移除上层木板。等熊猫平稳后，再移除下层木板。";
+"Clear the wooden blocks above the bed first. The stone bridge disappears as one piece when tapped." = "先移除床上方的木块。点击石桥时，所有石块会一起消失。";

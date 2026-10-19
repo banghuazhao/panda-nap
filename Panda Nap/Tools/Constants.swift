@@ -25,7 +25,7 @@ struct Constants {
     static let bannerAdUnitID = Bundle.main.object(forInfoDictionaryKey: "bannerViewAdUnitID") as? String ?? ""
     static let interstitialAdID = Bundle.main.object(forInfoDictionaryKey: "interstitialAdID") as? String ?? ""
     
-    static let totalLevel = 13
+    static let totalLevel = 16
 
     struct UserDefaultsKeys {
         static let openCount = "OPEN_COUNT"

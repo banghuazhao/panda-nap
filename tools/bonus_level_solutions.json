@@ -1,0 +1,360 @@
+{
+  "scene_size": [
+    2048,
+    1536
+  ],
+  "bed_position": [
+    1024,
+    400
+  ],
+  "playable_floor_y": 302.54545454545456,
+  "initial_panda_rotation": 0,
+  "seconds_after_last_removal_to_check": 4,
+  "validation": "Run the live SpriteKit physics with the normal GameScene rules.",
+  "levels": {
+    "14": {
+      "title": "Quiet Arch",
+      "hint": "Clear the wooden block above the bed, then remove the top plank.",
+      "nodes": [
+        {
+          "name": "arch_left_post",
+          "template": "wood_post",
+          "position": [
+            864,
+            439
+          ],
+          "frame_size": [
+            96.00000143051147,
+            272.00000405311584
+          ]
+        },
+        {
+          "name": "arch_right_post",
+          "template": "wood_post",
+          "position": [
+            1184,
+            439
+          ],
+          "frame_size": [
+            96.00000143051147,
+            272.00000405311584
+          ]
+        },
+        {
+          "name": "arch_top_plank",
+          "template": "wood_deck",
+          "position": [
+            1024,
+            639
+          ],
+          "frame_size": [
+            396.80000591278076,
+            128.00000190734863
+          ]
+        },
+        {
+          "name": "arch_center_block",
+          "template": "wood_square",
+          "position": [
+            1024,
+            393
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "panda",
+          "template": "panda",
+          "position": [
+            1000,
+            850.84
+          ],
+          "frame_size": [
+            280.80000418424606,
+            321.60000479221344
+          ]
+        }
+      ],
+      "removals": [
+        {
+          "at_seconds": 0.6,
+          "node": "arch_center_block",
+          "point": [
+            1024,
+            393
+          ]
+        },
+        {
+          "at_seconds": 1.2,
+          "node": "arch_top_plank",
+          "point": [
+            1024,
+            639
+          ]
+        }
+      ],
+      "expected": "The panda drops straight through the arch onto the bed."
+    },
+    "15": {
+      "title": "Double Decker",
+      "hint": "Clear the center block, then remove the upper plank. Let the panda settle before removing the lower plank.",
+      "nodes": [
+        {
+          "name": "tower_left_base",
+          "template": "wood_square",
+          "position": [
+            814,
+            393
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "tower_left_upper",
+          "template": "wood_square",
+          "position": [
+            814,
+            701
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "tower_right_base",
+          "template": "wood_square",
+          "position": [
+            1234,
+            393
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "tower_right_upper",
+          "template": "wood_square",
+          "position": [
+            1234,
+            701
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "tower_lower_plank",
+          "template": "wood_deck",
+          "position": [
+            1024,
+            547
+          ],
+          "frame_size": [
+            496.0,
+            128.00000190734863
+          ]
+        },
+        {
+          "name": "tower_upper_plank",
+          "template": "wood_deck",
+          "position": [
+            1024,
+            855
+          ],
+          "frame_size": [
+            496.0,
+            128.00000190734863
+          ]
+        },
+        {
+          "name": "tower_center_block",
+          "template": "wood_square",
+          "position": [
+            1024,
+            393
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "panda",
+          "template": "panda",
+          "position": [
+            1000,
+            1066.84
+          ],
+          "frame_size": [
+            280.80000418424606,
+            321.60000479221344
+          ]
+        }
+      ],
+      "removals": [
+        {
+          "at_seconds": 0.6,
+          "node": "tower_center_block",
+          "point": [
+            1024,
+            393
+          ]
+        },
+        {
+          "at_seconds": 1.2,
+          "node": "tower_upper_plank",
+          "point": [
+            1024,
+            855
+          ]
+        },
+        {
+          "at_seconds": 3.5,
+          "node": "tower_lower_plank",
+          "point": [
+            1024,
+            547
+          ]
+        }
+      ],
+      "expected": "The panda settles on the lower plank, then drops onto the bed."
+    },
+    "16": {
+      "title": "Stone Shelter",
+      "hint": "Clear both wooden blocks above the bed, then tap the stone bridge.",
+      "nodes": [
+        {
+          "name": "shelter_left_base",
+          "template": "wood_square",
+          "position": [
+            804,
+            393
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "shelter_left_stone",
+          "template": "stone_post",
+          "position": [
+            804,
+            622.2
+          ],
+          "frame_size": [
+            64.0,
+            278.4
+          ]
+        },
+        {
+          "name": "shelter_right_base",
+          "template": "wood_square",
+          "position": [
+            1244,
+            393
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "shelter_right_stone",
+          "template": "stone_post",
+          "position": [
+            1244,
+            622.2
+          ],
+          "frame_size": [
+            64.0,
+            278.4
+          ]
+        },
+        {
+          "name": "shelter_stone_bridge",
+          "template": "stone_deck",
+          "position": [
+            1024,
+            801.4
+          ],
+          "frame_size": [
+            504.0,
+            80.0
+          ]
+        },
+        {
+          "name": "shelter_center_base",
+          "template": "wood_square",
+          "position": [
+            1024,
+            393
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "shelter_center_top",
+          "template": "wood_square",
+          "position": [
+            1024,
+            573
+          ],
+          "frame_size": [
+            180.0,
+            180.0
+          ]
+        },
+        {
+          "name": "panda",
+          "template": "panda",
+          "position": [
+            1000,
+            989.24
+          ],
+          "frame_size": [
+            280.80000418424606,
+            321.60000479221344
+          ]
+        }
+      ],
+      "removals": [
+        {
+          "at_seconds": 0.6,
+          "node": "shelter_center_top",
+          "point": [
+            1024,
+            573
+          ]
+        },
+        {
+          "at_seconds": 1.0,
+          "node": "shelter_center_base",
+          "point": [
+            1024,
+            393
+          ]
+        },
+        {
+          "at_seconds": 1.6,
+          "node": "shelter_stone_bridge",
+          "point": [
+            1024,
+            801.4
+          ],
+          "target": "ancestor StoneNode compound with physics body"
+        }
+      ],
+      "expected": "The entire stone bridge disappears and the panda drops onto the bed."
+    }
+  }
+}

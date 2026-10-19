@@ -15,7 +15,7 @@ class BlockNode: SKSpriteNode, EventListenerNode,
     }
 
     func interact() {
-        guard let game = scene as? GameScene, game.playable, isUserInteractionEnabled else { return }
+        guard let game = scene as? GameScene, game.acceptsGameplayInput, isUserInteractionEnabled else { return }
         isUserInteractionEnabled = false
         game.blockRemoved(at: convert(.zero, to: game), stone: false)
         physicsBody = nil
