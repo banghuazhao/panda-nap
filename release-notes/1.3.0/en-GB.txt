@@ -1,0 +1,6 @@
+- 3 new puzzles, for 16 named levels in total.
+- Continue quickly with clearer progress, loss guidance, help, and optional hints.
+- Track personal bests, earn bonus-level medals, and explore filtered Records or Surprise Replay.
+- Adjust music and sound volumes separately, with a Calmer Animations option.
+- VoiceOver support for level selection, controls, obstacles, and results.
+- Complete all levels to earn and share your Nap Champion postcard.

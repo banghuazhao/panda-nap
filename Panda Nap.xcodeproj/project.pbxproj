@@ -699,8 +699,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0;
-				"CURRENT_PROJECT_VERSION[sdk=macosx*]" = 4;
+				CURRENT_PROJECT_VERSION = 5;
+				"CURRENT_PROJECT_VERSION[sdk=macosx*]" = 5;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -708,7 +708,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -727,8 +727,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Panda Nap/Panda Nap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0;
-				"CURRENT_PROJECT_VERSION[sdk=macosx*]" = 4;
+				CURRENT_PROJECT_VERSION = 5;
+				"CURRENT_PROJECT_VERSION[sdk=macosx*]" = 5;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				INFOPLIST_FILE = "Panda Nap/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -736,7 +736,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
