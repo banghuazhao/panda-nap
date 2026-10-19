@@ -9,6 +9,14 @@ final class MessageNode: SKNode {
     }
 
     private var buttons: [(choice: Choice, node: SKShapeNode)] = []
+    private(set) var accessibilityTitleNode: SKLabelNode?
+
+    var accessibilityChoices: [(Choice, SKNode, String)] {
+        buttons.compactMap { choice, node in
+            guard let label = node.children.first as? SKLabelNode, let title = label.text else { return nil }
+            return (choice, node, title)
+        }
+    }
 
     init(message: String, detail: String, won: Bool, finalLevel: Bool = false,
          pointScale: CGFloat, statistics: String? = nil) {
@@ -30,10 +38,13 @@ final class MessageNode: SKNode {
         title.position.y = (finalLevel ? 110 : (statistics == nil ? 46 : 65)) * pointScale
         title.fontSize = min(title.fontSize, 340 * pointScale / max(title.frame.width, 1) * title.fontSize)
         addChild(title)
+        accessibilityTitleNode = title
 
         let subtitle = SKLabelNode(fontNamed: "AvenirNext-Medium")
         subtitle.text = detail
         subtitle.fontSize = 15 * pointScale
+        subtitle.numberOfLines = 2
+        subtitle.preferredMaxLayoutWidth = 338 * pointScale
         subtitle.fontColor = SKColor(red: 0.84, green: 0.95, blue: 0.73, alpha: 1)
         subtitle.verticalAlignmentMode = .center
         subtitle.position.y = (finalLevel ? 78 : (statistics == nil ? 12 : 33)) * pointScale
@@ -58,6 +69,8 @@ final class MessageNode: SKNode {
             let record = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
             record.text = statistics
             record.fontSize = 14 * pointScale
+            record.numberOfLines = 2
+            record.preferredMaxLayoutWidth = 338 * pointScale
             record.fontColor = .white
             record.verticalAlignmentMode = .center
             record.position.y = (finalLevel ? -54 : 2) * pointScale

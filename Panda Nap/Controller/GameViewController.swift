@@ -70,6 +70,48 @@ class GameViewController: UIViewController {
         present(navigation, animated: true)
     }
 
+    func showRecords(for scene: MenuScene) {
+        guard presentedViewController == nil, !scene.isPaused,
+              (view as? SKView)?.scene === scene else { return }
+        let records = LevelRecordsViewController(progress: progressSnapshot())
+        let navigation = UINavigationController(rootViewController: records)
+        navigation.modalPresentationStyle = .formSheet
+        navigation.preferredContentSize = CGSize(width: 440, height: 500)
+        navigation.isModalInPresentation = true
+        var actionHandled = false
+
+        let finish: (Int?) -> Void = { [weak self, weak scene, weak navigation] level in
+            guard !actionHandled, let self, let scene, let navigation,
+                  self.presentedViewController === navigation else { return }
+            let selectedLevel = level.flatMap {
+                (1...self.progressSnapshot().unlockedLevel).contains($0) ? $0 : nil
+            }
+            actionHandled = true
+            self.dismiss(animated: true) { [weak self, weak scene] in
+                guard let self, let scene, (self.view as? SKView)?.scene === scene else { return }
+                scene.isPaused = false
+                if let selectedLevel, (1...self.progressSnapshot().unlockedLevel).contains(selectedLevel),
+                   scene.openLevel(selectedLevel) {
+                    return
+                }
+                SKTAudio.sharedInstance().resumeBackgroundMusic()
+            }
+        }
+        records.onClose = { finish(nil) }
+        records.onSelectLevel = { finish($0) }
+        scene.isPaused = true
+        SKTAudio.sharedInstance().pauseBackgroundMusic()
+        present(navigation, animated: true)
+    }
+
+    private func progressSnapshot() -> LevelProgress {
+        let defaults = UserDefaults.standard
+        return LevelProgress(
+            unlockedLevel: defaults.object(forKey: Constants.UserDefaultsKeys.bestLevel) as? Int ?? bestLevel,
+            completedLevel: defaults.integer(forKey: Constants.UserDefaultsKeys.completedLevel),
+            totalLevels: Constants.totalLevel)
+    }
+
     #if targetEnvironment(macCatalyst)
     override var canBecomeFirstResponder: Bool { true }
 
@@ -168,9 +210,9 @@ private final class GameSettingsViewController: UITableViewController {
         if section == 2 { return helpPages.count }
         guard section == 1 else {
             #if targetEnvironment(macCatalyst)
-            return 2
+            return 4
             #else
-            return 3
+            return 5
             #endif
         }
         #if !targetEnvironment(macCatalyst)
@@ -205,14 +247,27 @@ private final class GameSettingsViewController: UITableViewController {
             cell.accessoryType = .disclosureIndicator
             return cell
         }
+        if indexPath.row == 1 || indexPath.row == 3 {
+            let channel: AudioLevels.Channel = indexPath.row == 1 ? .music : .effects
+            let volumeCell = AudioVolumeCell(style: .default, reuseIdentifier: nil)
+            let title = channel == .music ? "Music Volume".localized() : "Sound Effects Volume".localized()
+            volumeCell.configure(title: title, volume: AudioLevels.volume(for: channel)) { volume in
+                switch channel {
+                case .music: GameSettings.musicVolume = volume
+                case .effects: GameSettings.effectsVolume = volume
+                }
+            }
+            return volumeCell
+        }
+        let toggleIndex = indexPath.row / 2
         let titles = ["Music".localized(), "Sound Effects".localized(), "Haptics".localized()]
         let values = [GameSettings.musicEnabled, GameSettings.effectsEnabled, GameSettings.hapticsEnabled]
-        cell.textLabel?.text = titles[indexPath.row]
+        cell.textLabel?.text = titles[toggleIndex]
         cell.selectionStyle = .none
         let toggle = UISwitch()
-        toggle.tag = indexPath.row
-        toggle.isOn = values[indexPath.row]
-        toggle.accessibilityLabel = titles[indexPath.row]
+        toggle.tag = toggleIndex
+        toggle.isOn = values[toggleIndex]
+        toggle.accessibilityLabel = titles[toggleIndex]
         toggle.addTarget(self, action: #selector(settingChanged(_:)), for: .valueChanged)
         cell.accessoryView = toggle
         return cell
@@ -265,9 +320,7 @@ private final class GameSettingsViewController: UITableViewController {
 
     @objc private func settingChanged(_ sender: UISwitch) {
         switch sender.tag {
-        case 0:
-            GameSettings.musicEnabled = sender.isOn
-            SKTAudio.sharedInstance().pauseBackgroundMusic()
+        case 0: GameSettings.musicEnabled = sender.isOn
         case 1: GameSettings.effectsEnabled = sender.isOn
         default: GameSettings.hapticsEnabled = sender.isOn
         }
@@ -275,6 +328,72 @@ private final class GameSettingsViewController: UITableViewController {
 
     @objc private func close() {
         dismiss(animated: true) { [onClose] in onClose?() }
+    }
+}
+
+private final class AudioVolumeCell: UITableViewCell {
+    private let titleLabel = UILabel()
+    private let valueLabel = UILabel()
+    private let slider = UISlider()
+    private var onVolumeChanged: ((Float) -> Void)?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        installControls()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        installControls()
+    }
+
+    func configure(title: String, volume: Float, onChange: @escaping (Float) -> Void) {
+        titleLabel.text = title
+        slider.accessibilityLabel = title
+        slider.value = volume
+        onVolumeChanged = onChange
+        updateValue()
+    }
+
+    private func installControls() {
+        selectionStyle = .none
+        titleLabel.font = .preferredFont(forTextStyle: .body)
+        titleLabel.adjustsFontForContentSizeCategory = true
+        titleLabel.numberOfLines = 0
+        titleLabel.isAccessibilityElement = false
+        valueLabel.font = .preferredFont(forTextStyle: .subheadline)
+        valueLabel.adjustsFontForContentSizeCategory = true
+        valueLabel.textColor = .secondaryLabel
+        valueLabel.isAccessibilityElement = false
+        valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        slider.minimumValue = 0
+        slider.maximumValue = 1
+        slider.addTarget(self, action: #selector(volumeChanged), for: .valueChanged)
+        let heading = UIStackView(arrangedSubviews: [titleLabel, valueLabel])
+        heading.alignment = .center
+        heading.spacing = 12
+        let controls = UIStackView(arrangedSubviews: [heading, slider])
+        controls.axis = .vertical
+        controls.spacing = 8
+        controls.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(controls)
+        NSLayoutConstraint.activate([
+            controls.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            controls.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            controls.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            controls.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
+        ])
+    }
+
+    @objc private func volumeChanged() {
+        updateValue()
+        onVolumeChanged?(slider.value)
+    }
+
+    private func updateValue() {
+        let percentage = NumberFormatter.localizedString(from: NSNumber(value: slider.value), number: .percent)
+        valueLabel.text = percentage
+        slider.accessibilityValue = percentage
     }
 }
 

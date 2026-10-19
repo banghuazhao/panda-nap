@@ -24,6 +24,7 @@ private var consecutiveLosses = 0
 
 class GameScene: SKScene {
     enum Command { case retry, levels, settings, next }
+    enum LossReason { case tipped, boundary }
     #if !targetEnvironment(macCatalyst)
     private var interstitialAd: InterstitialAd?
     private var privacyObserver: NSObjectProtocol?
@@ -36,6 +37,7 @@ class GameScene: SKScene {
     private var levelBadge: SKShapeNode?
     private var removalsBadge: SKShapeNode?
     private var bestBadge: SKShapeNode?
+    private var targetBadge: SKShapeNode?
     private var hintNode: SKShapeNode?
     private var tutorialTarget: SKNode?
     private var tutorialHalo: SKShapeNode?
@@ -44,6 +46,9 @@ class GameScene: SKScene {
     private var won = false
     private var isTransitioning = false
     private(set) var removalCount = 0
+    private(set) var lastLossReason: LossReason?
+    private var accessibilityObstacleNumbers: [ObjectIdentifier: Int] = [:]
+    private var resultAccessibilitySummary = ""
     private var pointScale: CGFloat = 1
 
     var bedNode: BedNode!
@@ -117,6 +122,8 @@ class GameScene: SKScene {
         installHUD()
         layoutHUD()
         installTutorial()
+        installAccessibility()
+        SceneAccessibility.announceScene(on: view, scene: self)
 
         #if !targetEnvironment(macCatalyst)
         privacyObserver = NotificationCenter.default.addObserver(
@@ -137,6 +144,7 @@ class GameScene: SKScene {
 
     override func willMove(from view: SKView) {
         super.willMove(from: view)
+        SceneAccessibility.clear(from: view, scene: self)
         #if !targetEnvironment(macCatalyst)
         if let privacyObserver { NotificationCenter.default.removeObserver(privacyObserver) }
         privacyObserver = nil
@@ -159,6 +167,11 @@ class GameScene: SKScene {
         bestBadge = pill("", name: "best", width: 100, height: 35, fill: recordFill)
         [levelsButton, retryButton, settingsButton, levelBadge, removalsBadge, bestBadge]
             .compactMap { $0 }.forEach(hud.addChild)
+        if let target = LevelChallenge.targetRemovals(for: currentLevel) {
+            targetBadge = pill(String(format: "Target: %d".localized(), target), name: "target",
+                               width: 100, height: 35, fill: recordFill)
+            if let targetBadge { hud.addChild(targetBadge) }
+        }
         updateRemovalHUD()
 
         if currentLevel == 1 && !GameSettings.tutorialCompleted {
@@ -181,7 +194,7 @@ class GameScene: SKScene {
 
         let label = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
         label.text = title
-        label.fontSize = ["hint", "removals", "best"].contains(name) ? 14 : (name == "levelBadge" ? 16 : 18)
+        label.fontSize = ["hint", "removals", "best", "target"].contains(name) ? 14 : (name == "levelBadge" ? 16 : 18)
         label.fontColor = .white
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
@@ -212,6 +225,8 @@ class GameScene: SKScene {
         removalsBadge?.position = CGPoint(x: right - 50 * pointScale, y: top - 54 * pointScale)
         bestBadge?.setScale(pointScale)
         bestBadge?.position = CGPoint(x: right - 50 * pointScale, y: top - 95 * pointScale)
+        targetBadge?.setScale(pointScale)
+        targetBadge?.position = CGPoint(x: right - 50 * pointScale, y: top - 136 * pointScale)
 
         layoutTutorial()
     }
@@ -255,7 +270,7 @@ class GameScene: SKScene {
 
     override func didSimulatePhysics() {
         if playable && !isTransitioning && abs(pandaNode.zRotation) > CGFloat(45).degreesToRadians() {
-            lose()
+            lose(reason: .tipped)
         }
     }
 
@@ -292,6 +307,10 @@ class GameScene: SKScene {
         guard acceptsGameplayInput else { return }
         if removalCount < Int.max { removalCount += 1 }
         updateRemovalHUD()
+        installAccessibility()
+        if UIAccessibility.isVoiceOverRunning {
+            UIAccessibility.post(notification: .layoutChanged, argument: nil)
+        }
         if currentLevel == 1 { GameSettings.tutorialCompleted = true }
         hintNode?.removeAllActions()
         hintNode?.run(.sequence([.fadeOut(withDuration: 0.12), .removeFromParent()]))
@@ -310,6 +329,113 @@ class GameScene: SKScene {
             format: "Removed: %d".localized(), removalCount)
         (bestBadge?.children.first as? SKLabelNode)?.text = LevelRecordStore.bestRemovals(for: currentLevel)
             .map { String(format: "Best: %d".localized(), $0) } ?? "No best yet".localized()
+    }
+
+    private func installAccessibility() {
+        guard let view else { return }
+        var items: [SceneAccessibility.Item] = []
+
+        func commandItem(_ node: SKNode, title: String, command: Command) -> SceneAccessibility.Item {
+            SceneAccessibility.Item(node: node, label: title,
+                isEnabled: { [weak self] in self?.canPerformCommand(command) == true },
+                activate: { [weak self] in
+                    guard let self, self.canPerformCommand(command) else { return false }
+                    self.performCommand(command)
+                    return true
+                })
+        }
+
+        if let resultCard {
+            if let title = resultCard.accessibilityTitleNode {
+                items.append(SceneAccessibility.Item(node: title, label: resultAccessibilitySummary,
+                                                       traits: .staticText))
+            }
+            for (choice, node, title) in resultCard.accessibilityChoices {
+                let command: Command
+                switch choice {
+                case .retry: command = .retry
+                case .levels: command = .levels
+                case .next: command = .next
+                }
+                items.append(commandItem(node, title: title, command: command))
+            }
+            SceneAccessibility.install(on: view, scene: self, items: items)
+            return
+        }
+
+        if let levelsButton { items.append(commandItem(levelsButton, title: "Levels".localized(), command: .levels)) }
+        if let settingsButton { items.append(commandItem(settingsButton, title: "Settings".localized(), command: .settings)) }
+        if let retryButton { items.append(commandItem(retryButton, title: "Retry".localized(), command: .retry)) }
+        if let levelBadge {
+            items.append(SceneAccessibility.Item(node: levelBadge,
+                label: String(format: "Level %d".localized(), currentLevel),
+                value: { [weak self] in
+                    guard let self else { return nil }
+                    var values = [String(format: "Removed: %d".localized(), self.removalCount)]
+                    if let best = LevelRecordStore.bestRemovals(for: self.currentLevel) {
+                        values.append(String(format: "Best: %d".localized(), best))
+                    } else { values.append("No best yet".localized()) }
+                    if let target = LevelChallenge.targetRemovals(for: self.currentLevel) {
+                        values.append(String(format: "Target: %d".localized(), target))
+                    }
+                    return values.joined(separator: ", ")
+                }, traits: .staticText))
+        }
+        if let pandaNode {
+            items.append(SceneAccessibility.Item(node: pandaNode, label: "Panda".localized(),
+                value: { [weak self, weak pandaNode] in
+                    guard let self, let pandaNode else { return nil }
+                    return self.accessibilityPosition(of: pandaNode)
+                }, traits: .staticText))
+        }
+        if let bedNode { items.append(SceneAccessibility.Item(node: bedNode, label: "Bed".localized(), traits: .staticText)) }
+
+        var obstacles: [SKNode] = []
+        enumerateChildNodes(withName: "//*") { node, _ in
+            if node is InteractiveNode && node.isUserInteractionEnabled { obstacles.append(node) }
+        }
+        obstacles.sort {
+            let first = accessibilityScenePosition(of: $0)
+            let second = accessibilityScenePosition(of: $1)
+            return first.y != second.y ? first.y > second.y : first.x < second.x
+        }
+        for obstacle in obstacles {
+            let id = ObjectIdentifier(obstacle)
+            if accessibilityObstacleNumbers[id] == nil {
+                accessibilityObstacleNumbers[id] = accessibilityObstacleNumbers.count + 1
+            }
+            let title = obstacle is StoneNode ? "Stone structure".localized()
+                : String(format: "Wooden block %d".localized(), accessibilityObstacleNumbers[id] ?? 1)
+            items.append(SceneAccessibility.Item(node: obstacle, label: title,
+                value: { [weak self, weak obstacle] in
+                    guard let self, let obstacle else { return nil }
+                    return self.accessibilityPosition(of: obstacle)
+                }, hint: "Double-tap to remove".localized(),
+                isEnabled: { [weak self, weak obstacle] in
+                    self?.acceptsGameplayInput == true && obstacle?.isUserInteractionEnabled == true
+                }, activate: { [weak self, weak obstacle] in
+                    guard let self, self.acceptsGameplayInput, let obstacle,
+                          obstacle.isUserInteractionEnabled, let interactive = obstacle as? InteractiveNode else { return false }
+                    let count = self.removalCount
+                    interactive.interact()
+                    return self.removalCount > count
+                }))
+        }
+        SceneAccessibility.install(on: view, scene: self, items: items)
+    }
+
+    private func accessibilityScenePosition(of node: SKNode) -> CGPoint {
+        let bounds = node.calculateAccumulatedFrame()
+        let point = CGPoint(x: bounds.midX, y: bounds.midY)
+        return node.parent?.convert(point, to: self) ?? node.position
+    }
+
+    private func accessibilityPosition(of node: SKNode) -> String {
+        let x = accessibilityScenePosition(of: node).x
+        let center = bedNode?.position.x ?? frame.midX
+        if x < center - 80 { return "Left of the bed".localized() }
+        if x > center + 80 { return "Right of the bed".localized() }
+        return "Above the bed".localized()
     }
 
     private func burst(at point: CGPoint, color: SKColor, count: Int, distance: CGFloat) {
@@ -356,7 +482,18 @@ class GameScene: SKScene {
         message.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(message)
         resultCard = message
+        resultAccessibilitySummary = [title, detail, statistics].compactMap { $0 }.joined(separator: ". ")
         message.appear(reduceMotion: UIAccessibility.isReduceMotionEnabled)
+        installAccessibility()
+        if UIAccessibility.isVoiceOverRunning {
+            // The result card fades in; announce after it has visible geometry.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self, weak message] in
+                guard let self, let message, self.view?.scene === self,
+                      self.resultCard === message, !self.resultActionHandled, !self.isPaused,
+                      self.view?.window?.rootViewController?.presentedViewController == nil else { return }
+                UIAccessibility.post(notification: .screenChanged, argument: nil)
+            }
+        }
     }
 
     func newGame() {
@@ -391,16 +528,20 @@ class GameScene: SKScene {
         newGame()
     }
 
-    func lose() {
+    func lose(reason: LossReason = .boundary) {
         guard playable, !isTransitioning else { return }
         playable = false
+        lastLossReason = reason
         SKTAudio.sharedInstance().pauseBackgroundMusic()
         SKTAudio.sharedInstance().playSoundEffect("lose.mp3")
         pandaNode.scare()
         burst(at: pandaNode.position, color: SKColor(red: 0.91, green: 0.57, blue: 0.25, alpha: 1),
               count: 12, distance: 65)
         resultHaptic(success: false)
-        showResult("Try again...".localized(), detail: "Choose what to do next".localized(), won: false)
+        let title = reason == .tipped ? "Panda tipped too far" : "Panda reached the boundary"
+        let detail = reason == .tipped ? "Keep Panda steady and try another order."
+            : "Guide Panda toward the bed and away from the edges."
+        showResult(title.localized(), detail: detail.localized(), won: false)
 
         consecutiveLosses += 1
     }
@@ -427,8 +568,11 @@ class GameScene: SKScene {
               count: 24, distance: 105)
         resultHaptic(success: true)
         let finished = currentLevel == Constants.totalLevel
-        let statistics = String(format: "%d removals • Best: %d".localized(), removalCount,
+        var statistics = String(format: "%d removals • Best: %d".localized(), removalCount,
                                 LevelRecordStore.bestRemovals(for: currentLevel) ?? removalCount)
+        if let target = LevelChallenge.targetRemovals(for: currentLevel), removalCount <= target {
+            statistics += "\n" + "Challenge medal earned!".localized()
+        }
         showResult(finished ? "Nap Champion".localized()
                             : (newBest ? "New personal best!" : "Nice job!").localized(),
                    detail: finished ? "Sweet dreams, Panda!".localized()
@@ -470,7 +614,7 @@ extension GameScene: SKPhysicsContactDelegate {
         if collision == (PhysicsCategory.Panda | PhysicsCategory.Bed) {
             win()
         } else if collision == (PhysicsCategory.Panda | PhysicsCategory.Edge) {
-            lose()
+            lose(reason: .boundary)
         }
     }
 }

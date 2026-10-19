@@ -32,9 +32,7 @@ enum GameSettings {
     get { UserDefaults.standard.object(forKey: musicKey) as? Bool ?? true }
     set {
       UserDefaults.standard.set(newValue, forKey: musicKey)
-      if newValue {
-        SKTAudio.sharedInstance().resumeBackgroundMusic()
-      } else {
+      if !newValue {
         SKTAudio.sharedInstance().pauseBackgroundMusic()
       }
     }
@@ -42,7 +40,26 @@ enum GameSettings {
 
   static var effectsEnabled: Bool {
     get { UserDefaults.standard.object(forKey: effectsKey) as? Bool ?? true }
-    set { UserDefaults.standard.set(newValue, forKey: effectsKey) }
+    set {
+      UserDefaults.standard.set(newValue, forKey: effectsKey)
+      if !newValue { SKTAudio.sharedInstance().soundEffectPlayer?.stop() }
+    }
+  }
+
+  static var musicVolume: Float {
+    get { AudioLevels.volume(for: .music) }
+    set {
+      let volume = AudioLevels.setVolume(newValue, for: .music)
+      SKTAudio.sharedInstance().backgroundMusicPlayer?.volume = volume
+    }
+  }
+
+  static var effectsVolume: Float {
+    get { AudioLevels.volume(for: .effects) }
+    set {
+      let volume = AudioLevels.setVolume(newValue, for: .effects)
+      SKTAudio.sharedInstance().soundEffectPlayer?.volume = volume
+    }
   }
 
   static var hapticsEnabled: Bool {
@@ -84,6 +101,7 @@ public class SKTAudio {
     }
     if let player = backgroundMusicPlayer {
       player.numberOfLoops = -1
+      player.volume = GameSettings.musicVolume
       player.prepareToPlay()
       if GameSettings.musicEnabled { player.play() }
     } else {
@@ -101,6 +119,7 @@ public class SKTAudio {
 
   public func resumeBackgroundMusic() {
     if let player = backgroundMusicPlayer {
+      player.volume = GameSettings.musicVolume
       if GameSettings.musicEnabled && !player.isPlaying {
         player.play()
       }
@@ -124,6 +143,7 @@ public class SKTAudio {
     }
     if let player = soundEffectPlayer {
       player.numberOfLoops = 0
+      player.volume = GameSettings.effectsVolume
       player.prepareToPlay()
       player.play()
     } else {

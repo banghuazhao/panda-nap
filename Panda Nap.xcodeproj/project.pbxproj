@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0DF3038E1D19487093228CA7 /* SceneAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C501D6E08C74A258EE8CFB7 /* SceneAccessibility.swift */; };
+		663365B016CF4070BB0203D6 /* LevelRecordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABC4E3084634D9DAA7B4CEA /* LevelRecordsViewController.swift */; };
+		2B34D1E885B14CE7A695E8C8 /* LevelChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BAFEE36A2847169EBFB1F2 /* LevelChallenge.swift */; };
+		AA3409218AC442CB87CFC665 /* AudioLevels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF199096B2014A3FB462EF18 /* AudioLevels.swift */; };
 		9BC405FC3F2C4A9291537DF8 /* Level16.sks in Resources */ = {isa = PBXBuildFile; fileRef = 054BFC04233244FBA4DD1645 /* Level16.sks */; };
 		CEF0D1EA6D45438CAC93D6C2 /* Level15.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7822FA20F04F4F4081303EE9 /* Level15.sks */; };
 		E5894C490C494F3F82A5D4EB /* Level14.sks in Resources */ = {isa = PBXBuildFile; fileRef = B3FBCFFADF25425E8CA9B18B /* Level14.sks */; };
@@ -76,6 +80,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6C501D6E08C74A258EE8CFB7 /* SceneAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneAccessibility.swift; sourceTree = "<group>"; };
+		8ABC4E3084634D9DAA7B4CEA /* LevelRecordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelRecordsViewController.swift; sourceTree = "<group>"; };
+		93BAFEE36A2847169EBFB1F2 /* LevelChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelChallenge.swift; sourceTree = "<group>"; };
+		EF199096B2014A3FB462EF18 /* AudioLevels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevels.swift; sourceTree = "<group>"; };
 		054BFC04233244FBA4DD1645 /* Level16.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level16.sks; sourceTree = "<group>"; };
 		7822FA20F04F4F4081303EE9 /* Level15.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level15.sks; sourceTree = "<group>"; };
 		B3FBCFFADF25425E8CA9B18B /* Level14.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level14.sks; sourceTree = "<group>"; };
@@ -208,6 +216,7 @@
 		9963D92A249EF2E900033FBD /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				6C501D6E08C74A258EE8CFB7 /* SceneAccessibility.swift */,
 				0AAED0D98A094BD790E7C274 /* LevelHint.swift */,
 				9963D954249F5DBC00033FBD /* SKTUtils */,
 				9963D92B249EF2E900033FBD /* Constants.swift */,
@@ -250,6 +259,7 @@
 		9963D94D249EF30200033FBD /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				8ABC4E3084634D9DAA7B4CEA /* LevelRecordsViewController.swift */,
 				9963D91A249EF24800033FBD /* GameViewController.swift */,
 				9971C8B125FA5978008CFCF9 /* MoreAppsViewController.swift */,
 			);
@@ -272,6 +282,8 @@
 		9963D94F249F5A4400033FBD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				93BAFEE36A2847169EBFB1F2 /* LevelChallenge.swift */,
+				EF199096B2014A3FB462EF18 /* AudioLevels.swift */,
 				3F63B7D6062A4B788524AEA7 /* LevelRecordStore.swift */,
 				1B5ED0D080624D90AD96C23D /* LevelProgress.swift */,
 				9963D950249F5A5F00033FBD /* BedNode.swift */,
@@ -461,6 +473,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DF3038E1D19487093228CA7 /* SceneAccessibility.swift in Sources */,
+				663365B016CF4070BB0203D6 /* LevelRecordsViewController.swift in Sources */,
+				2B34D1E885B14CE7A695E8C8 /* LevelChallenge.swift in Sources */,
+				AA3409218AC442CB87CFC665 /* AudioLevels.swift in Sources */,
 				ABE59016E8A44566B607922C /* LevelHint.swift in Sources */,
 				5DA38E2B92DD41E496280855 /* LevelRecordStore.swift in Sources */,
 				A30000000000000000000002 /* AdPrivacyManager.swift in Sources */,

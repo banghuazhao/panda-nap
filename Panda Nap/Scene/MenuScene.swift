@@ -23,6 +23,7 @@ class MenuScene: SKScene {
     private let hintBackdrop = SKShapeNode(rectOf: CGSize(width: 300, height: 42), cornerRadius: 21)
     private var moreAppsButton: SKShapeNode?
     private var settingsButton: SKShapeNode?
+    private var recordsButton: SKShapeNode?
     private var continueButton: SKShapeNode?
     private let progressLabel = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
     private let progressBackdrop = SKShapeNode(rectOf: CGSize(width: 184, height: 28), cornerRadius: 14)
@@ -78,6 +79,20 @@ class MenuScene: SKScene {
         addChild(settings)
         settingsButton = settings
 
+        let records = SKShapeNode(rectOf: CGSize(width: 112, height: 44), cornerRadius: 22)
+        records.fillColor = settings.fillColor
+        records.strokeColor = settings.strokeColor
+        records.lineWidth = 2
+        records.zPosition = 101
+        let recordsLabel = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
+        recordsLabel.text = "Records".localized()
+        recordsLabel.fontSize = 15
+        recordsLabel.fontColor = .white
+        recordsLabel.verticalAlignmentMode = .center
+        records.addChild(recordsLabel)
+        addChild(records)
+        recordsButton = records
+
         let continueControl = SKShapeNode(rectOf: CGSize(width: 208, height: 44), cornerRadius: 22)
         continueControl.fillColor = SKColor(red: 0.30, green: 0.61, blue: 0.17, alpha: 0.97)
         continueControl.strokeColor = SKColor(red: 0.85, green: 0.96, blue: 0.65, alpha: 1)
@@ -111,6 +126,8 @@ class MenuScene: SKScene {
         view.addGestureRecognizer(pan)
         panGesture = pan
         installLevelMap(allComplete: allComplete)
+        installAccessibility(on: view)
+        SceneAccessibility.announceScene(on: view, scene: self)
     }
 
     private func installLevelMap(allComplete: Bool) {
@@ -221,6 +238,7 @@ class MenuScene: SKScene {
 
     override func willMove(from view: SKView) {
         if let panGesture { view.removeGestureRecognizer(panGesture) }
+        SceneAccessibility.clear(from: view, scene: self)
     }
 
     private func addStatusMarker(to level: SKSpriteNode, completed: Bool) {
@@ -243,7 +261,8 @@ class MenuScene: SKScene {
     }
 
     func layoutUI() {
-        guard let view, let moreAppsButton, let settingsButton, let continueButton else { return }
+        guard let view, let moreAppsButton, let settingsButton, let recordsButton,
+              let continueButton else { return }
         let origin = convertPoint(fromView: .zero)
         let pointScale = abs(convertPoint(fromView: CGPoint(x: 1, y: 0)).x - origin.x)
         let safe = view.safeAreaInsets
@@ -259,6 +278,8 @@ class MenuScene: SKScene {
         moreAppsButton.position = CGPoint(x: right - 56 * pointScale, y: top)
         settingsButton.setScale(pointScale)
         settingsButton.position = CGPoint(x: left + 56 * pointScale, y: top)
+        recordsButton.setScale(pointScale)
+        recordsButton.position = CGPoint(x: left + 56 * pointScale, y: top - 54 * pointScale)
         let centerX = (left + right) / 2
         continueButton.setScale(pointScale)
         continueButton.position = CGPoint(x: centerX, y: top)
@@ -311,6 +332,11 @@ class MenuScene: SKScene {
             (view?.window?.rootViewController as? GameViewController)?.showSettings(for: self)
             return
         }
+        if recordsButton?.calculateAccumulatedFrame().contains(touchLocation) == true {
+            guard recordsButton?.calculateAccumulatedFrame().contains(start) == true else { return }
+            (view?.window?.rootViewController as? GameViewController)?.showRecords(for: self)
+            return
+        }
         if continueButton?.calculateAccumulatedFrame().contains(touchLocation) == true {
             guard continueButton?.calculateAccumulatedFrame().contains(start) == true else { return }
             if progress.allComplete {
@@ -341,11 +367,111 @@ class MenuScene: SKScene {
         openLevel(level)
     }
 
-    private func openLevel(_ level: Int) {
+    @discardableResult
+    func openLevel(_ level: Int) -> Bool {
         guard !isOpeningLevel, (1...progress.unlockedLevel).contains(level),
-              let view, let scene = GameScene.level(levelNum: level) else { return }
+              !isPaused, let view, view.scene === self,
+              view.window?.rootViewController?.presentedViewController == nil,
+              let scene = GameScene.level(levelNum: level) else { return false }
         isOpeningLevel = true
         view.presentScene(scene, transition: .fade(withDuration: 0.3))
+        return true
+    }
+
+    private func installAccessibility(on view: SKView) {
+        guard let settingsButton, let recordsButton, let continueButton,
+              let moreAppsButton else { return }
+        var items = [
+            SceneAccessibility.Item(node: settingsButton, label: "Settings".localized(),
+                isEnabled: { [weak self] in self?.isOpeningLevel == false },
+                activate: { [weak self] in
+                    guard let self, let controller = self.view?.window?.rootViewController as? GameViewController else { return false }
+                    controller.showSettings(for: self)
+                    return true
+                }),
+            SceneAccessibility.Item(node: recordsButton, label: "Records".localized(),
+                isEnabled: { [weak self] in self?.isOpeningLevel == false },
+                activate: { [weak self] in
+                    guard let self, let controller = self.view?.window?.rootViewController as? GameViewController else { return false }
+                    controller.showRecords(for: self)
+                    return true
+                }),
+            SceneAccessibility.Item(node: continueButton,
+                label: progress.allComplete ? "Replay Levels".localized()
+                    : String(format: "Continue: Level %d".localized(), progress.unlockedLevel),
+                isEnabled: { [weak self] in self?.isOpeningLevel == false },
+                activate: { [weak self] in
+                    guard let self else { return false }
+                    if self.progress.allComplete {
+                        self.focusOnFirstLevel()
+                        return true
+                    }
+                    return self.openLevel(self.progress.unlockedLevel)
+                }),
+            SceneAccessibility.Item(node: moreAppsButton, label: "More Apps".localized(),
+                isEnabled: { [weak self] in self?.isOpeningLevel == false },
+                activate: { [weak self] in
+                    guard let self, let controller = self.view?.window?.rootViewController else { return false }
+                    controller.present(MoreAppsViewController(), animated: true)
+                    return true
+                }),
+            SceneAccessibility.Item(node: progressBackdrop,
+                label: progressLabel.text ?? "", traits: .staticText),
+            SceneAccessibility.Item(node: hintBackdrop, label: "Level map".localized(),
+                value: { [weak self] in
+                    guard let self else { return nil }
+                    return String(format: "Level %d, %@".localized(),
+                                  self.centeredLevel, self.levelAccessibilityValue(self.centeredLevel))
+                }, hint: "Swipe up or down to explore levels".localized(), traits: .adjustable,
+                isEnabled: { [weak self] in self?.isOpeningLevel == false },
+                increment: { [weak self] in self?.adjustAccessibleMap(by: 1) },
+                decrement: { [weak self] in self?.adjustAccessibleMap(by: -1) })
+        ]
+        for level in 1...progress.totalLevels {
+            guard let node = moveableNode.childNode(withName: "level_\(level)") else { continue }
+            items.append(SceneAccessibility.Item(node: node,
+                label: String(format: "Level %d".localized(), level),
+                value: { [weak self] in self?.levelAccessibilityValue(level) },
+                hint: level > progress.unlockedLevel ? "Finish earlier levels to unlock".localized() : nil,
+                isEnabled: { [weak self] in
+                    guard let self else { return false }
+                    return !self.isOpeningLevel && level <= self.progress.unlockedLevel
+                }, activate: { [weak self] in self?.openLevel(level) ?? false }))
+        }
+        SceneAccessibility.install(on: view, scene: self, items: items)
+    }
+
+    private func levelAccessibilityValue(_ level: Int) -> String {
+        var details = [(level > progress.unlockedLevel ? "Locked"
+                        : level <= progress.completedLevels ? "Completed" : "Unlocked").localized()]
+        if let best = LevelRecordStore.bestRemovals(for: level) {
+            details.append(String(format: "Best: %d removals".localized(), best))
+        } else {
+            details.append("No winning record yet".localized())
+        }
+        if let target = LevelChallenge.targetRemovals(for: level) {
+            details.append(String(format: "Target: %d removals".localized(), target))
+            if LevelChallenge.medalEarned(for: level) {
+                details.append("Challenge earned".localized())
+            }
+        }
+        return details.joined(separator: ", ")
+    }
+
+    private var centeredLevel: Int {
+        let centerY = frame.midY - moveableNode.position.y
+        return (levelPoints.indices.min {
+            abs(levelPoints[$0].y - centerY) < abs(levelPoints[$1].y - centerY)
+        } ?? 0) + 1
+    }
+
+    private func adjustAccessibleMap(by amount: Int) {
+        guard !isOpeningLevel, !levelPoints.isEmpty else { return }
+        let level = min(max(centeredLevel + amount, 1), levelPoints.count)
+        moveableNode.removeAction(forKey: "focusLevel")
+        moveableNode.position.y = frame.midY - levelPoints[level - 1].y
+        // Adjustable elements announce their updated value automatically; keep
+        // focus on the map so repeated up/down gestures can continue browsing.
     }
 
     private func focusOnFirstLevel() {

@@ -7,6 +7,7 @@
 */
 
 "Try again..." = "Try again...";
+"More Apps" = "More Apps";
 "Nice job!" = "Nice job!";
 "Swipe to explore levels" = "Swipe to explore levels";
 "Back" = "Back";
@@ -90,3 +91,40 @@
 "Clear the wooden block above the bed, then remove the top plank." = "Clear the wooden block above the bed, then remove the top plank.";
 "Clear the center block, then remove the upper plank. Let Panda settle before removing the lower plank." = "Clear the center block, then remove the upper plank. Let Panda settle before removing the lower plank.";
 "Clear the wooden blocks above the bed first. The stone bridge disappears as one piece when tapped." = "Clear the wooden blocks above the bed first. The stone bridge disappears as one piece when tapped.";
+
+/* Records, optional medals, loss guidance, and accessibility */
+"Panda tipped too far" = "Panda tipped too far";
+"Panda reached the boundary" = "Panda reached the boundary";
+"Keep Panda steady and try another order." = "Keep Panda steady and try another order.";
+"Guide Panda toward the bed and away from the edges." = "Guide Panda toward the bed and away from the edges.";
+"Records" = "Records";
+"Level Records" = "Level Records";
+"Target: %d" = "Target: %d";
+"Challenge medal earned!" = "Challenge medal earned!";
+"Challenge complete" = "Challenge complete";
+"Completed" = "Completed";
+"Locked" = "Locked";
+"Available" = "Available";
+"No record yet" = "No record yet";
+"Optional challenge: win within the removal target to earn a medal." = "Optional challenge: win within the removal target to earn a medal.";
+"Panda" = "Panda";
+"Bed" = "Bed";
+"Wooden block %d" = "Wooden block %d";
+"Stone structure" = "Stone structure";
+"Double-tap to remove" = "Double-tap to remove";
+"Double-tap to play" = "Double-tap to play";
+"Swipe up or down to explore levels" = "Swipe up or down to explore levels";
+"Move through levels" = "Move through levels";
+"Return to level map" = "Return to level map";
+"Music Volume" = "Music Volume";
+"Sound Effects Volume" = "Sound Effects Volume";
+"Level map" = "Level map";
+"Unlocked" = "Unlocked";
+"Level %d, %@" = "Level %d, %@";
+"Best: %d removals" = "Best: %d removals";
+"Target: %d removals" = "Target: %d removals";
+"Challenge earned" = "Challenge earned";
+"No winning record yet" = "No winning record yet";
+"Left of the bed" = "Left of the bed";
+"Above the bed" = "Above the bed";
+"Right of the bed" = "Right of the bed";

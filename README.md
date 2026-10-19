@@ -37,6 +37,11 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 - **Personal Bests**: Track removals and beat your best winning count on each level
 - **Completion Postcard**: Earn the Nap Champion reward after finishing all 16 levels
 - **Mac Keyboard Controls**: R to retry, L for levels, S for settings, and N for the next level after a win
+- **Replay Records**: Browse completed, available, and locked levels with their winning records
+- **Optional Challenge Medals**: Beat verified removal targets on the three bonus levels
+- **Clear Loss Guidance**: See whether Panda tipped too far or reached the boundary
+- **Audio Balance**: Set independent music and effects volumes while keeping the mute switches
+- **VoiceOver Controls**: Explore the level map, choose levels, activate game controls, and remove obstacles
 - **Multi-language Support**: Available in English and Chinese (Simplified & Traditional)
 
 ## 🎯 How to Play
@@ -53,6 +58,10 @@ The first level highlights a removable block until you make your first move. Ope
 Choose **Continue: Level N** on the map to start the highest unlocked puzzle. After completing all 16 levels, **Replay Levels** scrolls the map back to the first level so you can choose a favorite. Settings → **How to Play** explains the rules without resetting your tutorial or progress; gameplay stays paused until you close Settings. While playing, Settings also offers an optional hint for the current level.
 
 Each removable block counts once; the connected stone structure counts as one removal. Personal bests update only after a win, and Retry resets the current attempt's count. Completing all 16 levels earns a bedtime postcard that you can revisit in Settings. Players who completed the earlier 13-level release keep that progress and immediately unlock Level 14.
+
+Open **Records** on the level map to choose a puzzle and review its best winning count. Older completed levels can show **No record yet** until you replay them. Optional medals use verified targets: 2 removals for Level 14, and 3 each for Levels 15 and 16. Targets do not affect unlocking, and medals are derived from your existing best records.
+
+Settings has separate music and effects volume sliders. These control the game's audio balance; device volume still controls the final output. Changing volumes or unmuting in Settings keeps the music paused until Settings closes. With VoiceOver, use the adjustable **Level map** control to move between levels, then activate an unlocked level. Game controls, obstacle positions relative to the bed, result choices, and Records are labeled for VoiceOver.
 
 ## 🛠 Technical Details
 
@@ -119,6 +128,10 @@ swiftc 'Panda Nap/Model/LevelProgress.swift' Scripts/validate-level-progress.swi
 /tmp/panda-progress-check
 swiftc 'Panda Nap/Model/LevelRecordStore.swift' Scripts/validate-level-records.swift -o /tmp/panda-record-check
 /tmp/panda-record-check
+swiftc 'Panda Nap/Model/AudioLevels.swift' Scripts/validate-audio-levels.swift -o /tmp/panda-audio-check
+/tmp/panda-audio-check
+swiftc 'Panda Nap/Model/LevelRecordStore.swift' 'Panda Nap/Model/LevelChallenge.swift' Scripts/validate-level-challenges.swift -o /tmp/panda-challenge-check
+/tmp/panda-challenge-check
 swiftc -parse-as-library Scripts/validate-bonus-levels.swift -o /tmp/panda-bonus-check -framework SpriteKit -framework Metal
 /tmp/panda-bonus-check
 ```
