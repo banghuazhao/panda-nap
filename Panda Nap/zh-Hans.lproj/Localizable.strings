@@ -106,3 +106,18 @@
 "Ads are off while tracking is denied in your region. Choose Stop ads to keep them off if that setting changes." = "在你所在地区，跟踪权限被拒绝时广告会关闭。选择「停止广告」后，即使该设置发生变化，广告也会保持关闭。";
 "Stop ads" = "停止广告";
 "OK" = "好";
+
+/* Level map and help */
+"Continue: Level %d" = "继续：第 %d 关";
+"Replay Levels" = "重玩关卡";
+"%d / %d completed" = "已完成 %d / %d 关";
+"Help" = "帮助";
+"How to Play" = "玩法说明";
+"Reach the bed" = "回到床上";
+"Help the sleepy panda land safely on her bed." = "帮助困倦的熊猫安全落到床上。";
+"Remove obstacles" = "移除障碍";
+"Tap obstacles to remove them. Choose the order carefully." = "点击障碍物即可将其移除。仔细选择移除顺序。";
+"Keep the panda steady" = "保持熊猫平稳";
+"The level ends if the panda falls to the ground or tilts too far." = "如果熊猫掉到地上或倾斜过大，本关就会结束。";
+"Try another approach" = "尝试其他方法";
+"Use Retry to restart the level, or Levels to choose an unlocked level." = "点击「重试」重新开始本关，或点击「关卡」选择已解锁的关卡。";

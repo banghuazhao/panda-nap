@@ -40,3 +40,18 @@
 "Ads are off while tracking is denied in your region. Choose Stop ads to keep them off if that setting changes." = "Ads are off while tracking is denied in your region. Choose Stop ads to keep them off if that setting changes.";
 "Stop ads" = "Stop ads";
 "OK" = "OK";
+
+/* Level map and help */
+"Continue: Level %d" = "Continue: Level %d";
+"Replay Levels" = "Replay Levels";
+"%d / %d completed" = "%d / %d completed";
+"Help" = "Help";
+"How to Play" = "How to Play";
+"Reach the bed" = "Reach the bed";
+"Help the sleepy panda land safely on her bed." = "Help the sleepy panda land safely on her bed.";
+"Remove obstacles" = "Remove obstacles";
+"Tap obstacles to remove them. Choose the order carefully." = "Tap obstacles to remove them. Choose the order carefully.";
+"Keep the panda steady" = "Keep the panda steady";
+"The level ends if the panda falls to the ground or tilts too far." = "The level ends if the panda falls to the ground or tilts too far.";
+"Try another approach" = "Try another approach";
+"Use Retry to restart the level, or Levels to choose an unlocked level." = "Use Retry to restart the level, or Levels to choose an unlocked level.";

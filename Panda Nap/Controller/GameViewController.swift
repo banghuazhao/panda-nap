@@ -86,7 +86,8 @@ private final class GameSettingsViewController: UITableViewController {
         title = "Settings".localized()
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Done".localized(), style: .done, target: self, action: #selector(close))
-        tableView.rowHeight = 58
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 58
         #if !targetEnvironment(macCatalyst)
         privacyObserver = NotificationCenter.default.addObserver(
             forName: .adPrivacyDidChange, object: nil, queue: .main
@@ -101,10 +102,11 @@ private final class GameSettingsViewController: UITableViewController {
     #endif
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 2 { return 1 }
         guard section == 1 else {
             #if targetEnvironment(macCatalyst)
             return 2
@@ -120,11 +122,23 @@ private final class GameSettingsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        section == 0 ? "Audio & Feedback".localized() : "Privacy".localized()
+        switch section {
+        case 0: return "Audio & Feedback".localized()
+        case 1: return "Privacy".localized()
+        default: return "Help".localized()
+        }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.textLabel?.font = .preferredFont(forTextStyle: .body)
+        cell.textLabel?.adjustsFontForContentSizeCategory = true
+        cell.textLabel?.numberOfLines = 0
+        if indexPath.section == 2 {
+            cell.textLabel?.text = "How to Play".localized()
+            cell.accessoryType = .disclosureIndicator
+            return cell
+        }
         if indexPath.section == 1 {
             cell.textLabel?.text = (indexPath.row == 0 ? "Privacy Policy" : "Privacy settings").localized()
             cell.accessoryType = .disclosureIndicator
@@ -145,6 +159,10 @@ private final class GameSettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 2 {
+            navigationController?.pushViewController(GameHelpViewController(), animated: true)
+            return
+        }
         guard indexPath.section == 1 else { return }
         if indexPath.row == 0 {
             guard let url = URL(string: "https://apps-bay.github.io/Apps-Bay-Website/privacy/") else { return }
@@ -192,5 +210,65 @@ private final class GameSettingsViewController: UITableViewController {
 
     @objc private func close() {
         dismiss(animated: true) { [onClose] in onClose?() }
+    }
+}
+
+private final class GameHelpViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "How to Play".localized()
+        view.backgroundColor = .systemBackground
+
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+
+        let instructions = UIStackView()
+        instructions.axis = .vertical
+        instructions.spacing = 24
+        instructions.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(instructions)
+
+        let sections = [
+            ("Reach the bed", "Help the sleepy panda land safely on her bed."),
+            ("Remove obstacles", "Tap obstacles to remove them. Choose the order carefully."),
+            ("Keep the panda steady", "The level ends if the panda falls to the ground or tilts too far."),
+            ("Try another approach", "Use Retry to restart the level, or Levels to choose an unlocked level.")
+        ]
+        for (heading, detail) in sections {
+            let section = UIStackView()
+            section.axis = .vertical
+            section.spacing = 8
+
+            let headingLabel = UILabel()
+            headingLabel.text = heading.localized()
+            headingLabel.font = .preferredFont(forTextStyle: .headline)
+            headingLabel.adjustsFontForContentSizeCategory = true
+            headingLabel.numberOfLines = 0
+            headingLabel.accessibilityTraits.insert(.header)
+
+            let detailLabel = UILabel()
+            detailLabel.text = detail.localized()
+            detailLabel.font = .preferredFont(forTextStyle: .body)
+            detailLabel.adjustsFontForContentSizeCategory = true
+            detailLabel.numberOfLines = 0
+            detailLabel.textColor = .secondaryLabel
+
+            section.addArrangedSubview(headingLabel)
+            section.addArrangedSubview(detailLabel)
+            instructions.addArrangedSubview(section)
+        }
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            instructions.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 20),
+            instructions.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -20),
+            instructions.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 24),
+            instructions.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -24),
+            instructions.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -40)
+        ])
     }
 }

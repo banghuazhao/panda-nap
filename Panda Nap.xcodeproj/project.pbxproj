@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		82154AD70C0E406BB4179908 /* LevelProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5ED0D080624D90AD96C23D /* LevelProgress.swift */; };
 		A40000000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000002 /* PrivacyInfo.xcprivacy */; };
 		995D076024A62B6A00C2C115 /* oboarding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 995D075F24A62B6A00C2C115 /* oboarding.mp3 */; };
 		995D076224A6375800C2C115 /* Level2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 995D076124A6375200C2C115 /* Level2.sks */; };
@@ -70,6 +71,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B5ED0D080624D90AD96C23D /* LevelProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelProgress.swift; sourceTree = "<group>"; };
 		A40000000000000000000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		995D075F24A62B6A00C2C115 /* oboarding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = oboarding.mp3; sourceTree = "<group>"; };
 		995D076124A6375200C2C115 /* Level2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level2.sks; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 		9963D94F249F5A4400033FBD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1B5ED0D080624D90AD96C23D /* LevelProgress.swift */,
 				9963D950249F5A5F00033FBD /* BedNode.swift */,
 				9963D952249F5AFB00033FBD /* PandaNode.swift */,
 				9963D985249F641F00033FBD /* BlockNode.swift */,
@@ -460,6 +463,7 @@
 				9971C8B925FA59FF008CFCF9 /* UIFont+Extension.swift in Sources */,
 				9963D913249EF24800033FBD /* AppDelegate.swift in Sources */,
 				9963D988249F680D00033FBD /* MessageNode.swift in Sources */,
+				82154AD70C0E406BB4179908 /* LevelProgress.swift in Sources */,
 				9963D968249F5DBC00033FBD /* CGPoint+Extensions.swift in Sources */,
 				9963D965249F5DBC00033FBD /* SKAction+Extensions.swift in Sources */,
 				9963D964249F5DBC00033FBD /* SKTTimingFunctions.swift in Sources */,

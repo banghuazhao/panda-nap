@@ -30,6 +30,9 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 - **Progressive Difficulty**: Levels become more challenging as you advance
 - **Beautiful Artwork**: Charming panda character and relaxing visual design
 - **Adjustable Feedback**: Separate controls for music, sound effects, and haptics
+- **Quick Continue**: Open the highest unlocked level directly from the map
+- **Clear Progress**: Completion counter, checkmarks, and lock icons on the level map
+- **Help Anytime**: Revisit the controls and rules through Settings → How to Play
 - **Multi-language Support**: Available in English and Chinese (Simplified & Traditional)
 
 ## 🎯 How to Play
@@ -42,6 +45,8 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 6. **Results**: Choose Retry or Levels after a loss, and Next Level after a win
 
 The first level highlights a removable block until you make your first move. Open **Settings** from the level map or a level to adjust music, sound effects, and haptics.
+
+Choose **Continue: Level N** on the map to start the highest unlocked puzzle. After completing all 13 levels, **Replay Levels** scrolls the map back to the first level so you can choose a favorite. Settings → **How to Play** explains the rules without resetting your tutorial or progress; gameplay stays paused until you close Settings.
 
 ## 🛠 Technical Details
 
@@ -98,6 +103,15 @@ Localization, Auto Layout, menu scrolling, and view configuration now use first-
 4. **Build and run**
    - Select your target device or simulator
    - Press `Cmd + R` to build and run
+
+### Progress regression check
+
+Run this from the repository root to check fresh installs, older saves, invalid values, and final-level completion:
+
+```bash
+swiftc 'Panda Nap/Model/LevelProgress.swift' Scripts/validate-level-progress.swift -o /tmp/panda-progress-check
+/tmp/panda-progress-check
+```
 
 ## 📁 Project Structure
 
