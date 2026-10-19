@@ -20,9 +20,12 @@ class BlockNode: SKSpriteNode, EventListenerNode,
         game.blockRemoved(at: convert(.zero, to: game), stone: false)
         physicsBody = nil
         SKTAudio.sharedInstance().playSoundEffect("pop.mp3")
-        let pop = SKAction.group([.scale(to: 1.12, duration: 0.08), .fadeAlpha(to: 0.8, duration: 0.08)])
+        let reduceMotion = GameSettings.reduceMotionEnabled
+        let pop = reduceMotion ? SKAction.fadeAlpha(to: 0.8, duration: 0.08)
+            : SKAction.group([.scale(to: 1.12, duration: 0.08), .fadeAlpha(to: 0.8, duration: 0.08)])
         pop.timingMode = .easeOut
-        let vanish = SKAction.group([.scale(to: 0.15, duration: 0.18), .fadeOut(withDuration: 0.18)])
+        let vanish = reduceMotion ? SKAction.fadeOut(withDuration: 0.18)
+            : SKAction.group([.scale(to: 0.15, duration: 0.18), .fadeOut(withDuration: 0.18)])
         vanish.timingMode = .easeIn
         run(.sequence([pop, vanish, .removeFromParent()]))
     }

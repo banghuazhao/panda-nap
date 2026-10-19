@@ -28,7 +28,8 @@ class StoneNode: SKSpriteNode, EventListenerNode, InteractiveNode {
     game.blockRemoved(at: convert(center, to: game), stone: true)
     physicsBody = nil
     SKTAudio.sharedInstance().playSoundEffect("pop.mp3")
-    let vanish = SKAction.group([.scale(to: 0.72, duration: 0.2), .fadeOut(withDuration: 0.2)])
+    let vanish = GameSettings.reduceMotionEnabled ? SKAction.fadeOut(withDuration: 0.2)
+      : SKAction.group([.scale(to: 0.72, duration: 0.2), .fadeOut(withDuration: 0.2)])
     vanish.timingMode = .easeIn
     run(.sequence([vanish, .removeFromParent()]))
   }

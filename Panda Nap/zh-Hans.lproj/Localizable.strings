@@ -193,3 +193,37 @@
 "Left of the bed" = "在床的左侧";
 "Above the bed" = "在床的上方";
 "Right of the bed" = "在床的右侧";
+
+/* Records filters, calmer animations, and sharing */
+"Filter" = "筛选";
+"All" = "全部";
+"No record" = "暂无纪录";
+"Medals to earn" = "待获奖章";
+"No levels match this filter." = "没有符合此筛选条件的关卡。";
+"Surprise Replay" = "随机重玩";
+"Replay a random completed level" = "随机重玩一个已完成的关卡";
+"Cancel" = "取消";
+"Calmer Animations" = "减少动画";
+"Reduce decorative motion. The device Reduce Motion setting is always respected." = "减少装饰性动态效果。始终遵循设备的「减弱动态效果」设置。";
+"Share Postcard" = "分享纪念卡";
+"Share your Nap Champion postcard." = "分享你的午睡冠军纪念卡。";
+"Panda Nap" = "熊猫要午休";
+
+/* Named puzzles */
+"Level %d — %@" = "第 %d 关 — %@";
+"Bedtime Basics" = "入睡第一课";
+"Center Passage" = "中央通道";
+"Wide Crossing" = "宽阔通道";
+"Overlapping Planks" = "交叠木板";
+"Staggered Stack" = "错位堆叠";
+"Left Perch" = "左侧高台";
+"Right-Hand Descent" = "右侧下降";
+"Upright Balance" = "直立平衡";
+"From the Left" = "左侧出发";
+"Stone Bridge" = "石桥";
+"Right Perch" = "右侧高台";
+"Left-Hand Descent" = "左侧下降";
+"From the Right" = "右侧出发";
+"Quiet Arch" = "宁静拱门";
+"Double Decker" = "双层高台";
+"Stone Shelter" = "石屋庇护";

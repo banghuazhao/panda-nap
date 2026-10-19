@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F7BE0A02AE2B4BE392AB9AA1 /* CompletionPostcard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6074C7D2AAE41C88964EF4A /* CompletionPostcard.swift */; };
+		560C65046F3E4896BD847DEA /* MotionPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59D30EC8D9449E49AA272B4 /* MotionPreferences.swift */; };
+		7C8B68CC424F430EB93E3C48 /* LevelCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622520DA6791436E8E081229 /* LevelCatalog.swift */; };
+		9C3D9C0A913845718B64FCF1 /* ReplayOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC95817E9C94D938DD4F82D /* ReplayOptions.swift */; };
 		0DF3038E1D19487093228CA7 /* SceneAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C501D6E08C74A258EE8CFB7 /* SceneAccessibility.swift */; };
 		663365B016CF4070BB0203D6 /* LevelRecordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABC4E3084634D9DAA7B4CEA /* LevelRecordsViewController.swift */; };
 		2B34D1E885B14CE7A695E8C8 /* LevelChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BAFEE36A2847169EBFB1F2 /* LevelChallenge.swift */; };
@@ -80,6 +84,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F6074C7D2AAE41C88964EF4A /* CompletionPostcard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionPostcard.swift; sourceTree = "<group>"; };
+		C59D30EC8D9449E49AA272B4 /* MotionPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionPreferences.swift; sourceTree = "<group>"; };
+		622520DA6791436E8E081229 /* LevelCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelCatalog.swift; sourceTree = "<group>"; };
+		ABC95817E9C94D938DD4F82D /* ReplayOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayOptions.swift; sourceTree = "<group>"; };
 		6C501D6E08C74A258EE8CFB7 /* SceneAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneAccessibility.swift; sourceTree = "<group>"; };
 		8ABC4E3084634D9DAA7B4CEA /* LevelRecordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelRecordsViewController.swift; sourceTree = "<group>"; };
 		93BAFEE36A2847169EBFB1F2 /* LevelChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelChallenge.swift; sourceTree = "<group>"; };
@@ -282,6 +290,10 @@
 		9963D94F249F5A4400033FBD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F6074C7D2AAE41C88964EF4A /* CompletionPostcard.swift */,
+				C59D30EC8D9449E49AA272B4 /* MotionPreferences.swift */,
+				622520DA6791436E8E081229 /* LevelCatalog.swift */,
+				ABC95817E9C94D938DD4F82D /* ReplayOptions.swift */,
 				93BAFEE36A2847169EBFB1F2 /* LevelChallenge.swift */,
 				EF199096B2014A3FB462EF18 /* AudioLevels.swift */,
 				3F63B7D6062A4B788524AEA7 /* LevelRecordStore.swift */,
@@ -473,6 +485,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7BE0A02AE2B4BE392AB9AA1 /* CompletionPostcard.swift in Sources */,
+				560C65046F3E4896BD847DEA /* MotionPreferences.swift in Sources */,
+				7C8B68CC424F430EB93E3C48 /* LevelCatalog.swift in Sources */,
+				9C3D9C0A913845718B64FCF1 /* ReplayOptions.swift in Sources */,
 				0DF3038E1D19487093228CA7 /* SceneAccessibility.swift in Sources */,
 				663365B016CF4070BB0203D6 /* LevelRecordsViewController.swift in Sources */,
 				2B34D1E885B14CE7A695E8C8 /* LevelChallenge.swift in Sources */,

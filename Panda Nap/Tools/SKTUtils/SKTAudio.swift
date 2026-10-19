@@ -21,6 +21,7 @@
  */
 
 import AVFoundation
+import UIKit
 
 enum GameSettings {
   private static let musicKey = "game.musicEnabled"
@@ -70,6 +71,16 @@ enum GameSettings {
   static var tutorialCompleted: Bool {
     get { UserDefaults.standard.bool(forKey: tutorialKey) }
     set { UserDefaults.standard.set(newValue, forKey: tutorialKey) }
+  }
+
+  static var calmerAnimationsEnabled: Bool {
+    get { MotionPreferences.appEnabled() }
+    set { MotionPreferences.setAppEnabled(newValue) }
+  }
+
+  static var reduceMotionEnabled: Bool {
+    MotionPreferences.reduceMotionEnabled(appPreference: calmerAnimationsEnabled,
+                                         systemPreference: UIAccessibility.isReduceMotionEnabled)
   }
 }
 

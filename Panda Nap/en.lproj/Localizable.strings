@@ -128,3 +128,37 @@
 "Left of the bed" = "Left of the bed";
 "Above the bed" = "Above the bed";
 "Right of the bed" = "Right of the bed";
+
+/* Records filters, calmer animations, and sharing */
+"Filter" = "Filter";
+"All" = "All";
+"No record" = "No record";
+"Medals to earn" = "Medals to earn";
+"No levels match this filter." = "No levels match this filter.";
+"Surprise Replay" = "Surprise Replay";
+"Replay a random completed level" = "Replay a random completed level";
+"Cancel" = "Cancel";
+"Calmer Animations" = "Calmer Animations";
+"Reduce decorative motion. The device Reduce Motion setting is always respected." = "Reduce decorative motion. The device Reduce Motion setting is always respected.";
+"Share Postcard" = "Share Postcard";
+"Share your Nap Champion postcard." = "Share your Nap Champion postcard.";
+"Panda Nap" = "Panda Nap";
+
+/* Named puzzles */
+"Level %d — %@" = "Level %d — %@";
+"Bedtime Basics" = "Bedtime Basics";
+"Center Passage" = "Center Passage";
+"Wide Crossing" = "Wide Crossing";
+"Overlapping Planks" = "Overlapping Planks";
+"Staggered Stack" = "Staggered Stack";
+"Left Perch" = "Left Perch";
+"Right-Hand Descent" = "Right-Hand Descent";
+"Upright Balance" = "Upright Balance";
+"From the Left" = "From the Left";
+"Stone Bridge" = "Stone Bridge";
+"Right Perch" = "Right Perch";
+"Left-Hand Descent" = "Left-Hand Descent";
+"From the Right" = "From the Right";
+"Quiet Arch" = "Quiet Arch";
+"Double Decker" = "Double Decker";
+"Stone Shelter" = "Stone Shelter";

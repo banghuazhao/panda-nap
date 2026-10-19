@@ -17,6 +17,8 @@ class MenuScene: SKScene {
     private var touchStartLocation: CGPoint?
     private var touchWasPanned = false
     private var isOpeningLevel = false
+    private var motionObserver: NSObjectProtocol?
+    private var currentLevelNode: SKSpriteNode?
     private var progress = LevelProgress(unlockedLevel: 1, completedLevel: 0,
                                          totalLevels: Constants.totalLevel)
     private let hint = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
@@ -126,6 +128,9 @@ class MenuScene: SKScene {
         view.addGestureRecognizer(pan)
         panGesture = pan
         installLevelMap(allComplete: allComplete)
+        motionObserver = NotificationCenter.default.addObserver(
+            forName: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil, queue: .main
+        ) { [weak self] _ in self?.refreshMotionPreferences() }
         installAccessibility(on: view)
         SceneAccessibility.announceScene(on: view, scene: self)
     }
@@ -173,26 +178,6 @@ class MenuScene: SKScene {
         levelCurrent.position = levelNodePoints[progress.unlockedLevel - 1]
         if progress.unlockedLevel % 2 == 0 {
             levelCurrent.xScale *= -1
-            if !UIAccessibility.isReduceMotionEnabled { levelCurrent.run(
-                SKAction.repeatForever(
-                    SKAction.sequence(
-                        [SKAction.group(
-                            [SKAction.scaleY(to: 1.05, duration: 0.5),
-                             SKAction.scaleX(to: -1.05, duration: 0.5)]),
-                        SKAction.group(
-                            [SKAction.scaleY(to: 0.95, duration: 0.5),
-                             SKAction.scaleX(to: -0.95, duration: 0.5)])]
-                    )
-                )
-            ) }
-        } else {
-            if !UIAccessibility.isReduceMotionEnabled { levelCurrent.run(
-                SKAction.repeatForever(
-                    SKAction.sequence(
-                        [SKAction.scale(to: 1.05, duration: 0.5),
-                         SKAction.scale(to: 0.95, duration: 0.5)])
-                )
-            ) }
         }
 
         levelCurrent.name = "level_\(progress.unlockedLevel)"
@@ -234,11 +219,36 @@ class MenuScene: SKScene {
 
         levelPoints = levelNodePoints
         moveableNode.position.y = frame.midY - levelNodePoints[progress.unlockedLevel - 1].y
+        currentLevelNode = levelCurrent
+        refreshMotionPreferences()
     }
 
     override func willMove(from view: SKView) {
         if let panGesture { view.removeGestureRecognizer(panGesture) }
+        if let motionObserver { NotificationCenter.default.removeObserver(motionObserver) }
+        motionObserver = nil
         SceneAccessibility.clear(from: view, scene: self)
+    }
+
+    /// Refresh only cosmetic actions; level selection and its guards stay unchanged.
+    func refreshMotionPreferences() {
+        let reduceMotion = GameSettings.reduceMotionEnabled
+        if reduceMotion, moveableNode.action(forKey: "focusLevel") != nil,
+           let firstLevel = levelPoints.first {
+            moveableNode.removeAction(forKey: "focusLevel")
+            moveableNode.position.y = frame.midY - firstLevel.y
+        }
+        guard let currentLevelNode else { return }
+        currentLevelNode.removeAction(forKey: "currentLevelPulse")
+        let direction: CGFloat = progress.unlockedLevel % 2 == 0 ? -1 : 1
+        currentLevelNode.xScale = direction
+        currentLevelNode.yScale = 1
+        guard !reduceMotion else { return }
+        let grow = SKAction.group([.scaleX(to: direction * 1.05, duration: 0.5),
+                                   .scaleY(to: 1.05, duration: 0.5)])
+        let shrink = SKAction.group([.scaleX(to: direction * 0.95, duration: 0.5),
+                                     .scaleY(to: 0.95, duration: 0.5)])
+        currentLevelNode.run(.repeatForever(.sequence([grow, shrink])), withKey: "currentLevelPulse")
     }
 
     private func addStatusMarker(to level: SKSpriteNode, completed: Bool) {
@@ -399,6 +409,10 @@ class MenuScene: SKScene {
             SceneAccessibility.Item(node: continueButton,
                 label: progress.allComplete ? "Replay Levels".localized()
                     : String(format: "Continue: Level %d".localized(), progress.unlockedLevel),
+                value: { [weak self] in
+                    guard let self, !self.progress.allComplete else { return nil }
+                    return LevelCatalog.name(for: self.progress.unlockedLevel)
+                },
                 isEnabled: { [weak self] in self?.isOpeningLevel == false },
                 activate: { [weak self] in
                     guard let self else { return false }
@@ -420,8 +434,8 @@ class MenuScene: SKScene {
             SceneAccessibility.Item(node: hintBackdrop, label: "Level map".localized(),
                 value: { [weak self] in
                     guard let self else { return nil }
-                    return String(format: "Level %d, %@".localized(),
-                                  self.centeredLevel, self.levelAccessibilityValue(self.centeredLevel))
+                    return [LevelCatalog.title(for: self.centeredLevel),
+                            self.levelAccessibilityValue(self.centeredLevel)].joined(separator: ", ")
                 }, hint: "Swipe up or down to explore levels".localized(), traits: .adjustable,
                 isEnabled: { [weak self] in self?.isOpeningLevel == false },
                 increment: { [weak self] in self?.adjustAccessibleMap(by: 1) },
@@ -430,7 +444,7 @@ class MenuScene: SKScene {
         for level in 1...progress.totalLevels {
             guard let node = moveableNode.childNode(withName: "level_\(level)") else { continue }
             items.append(SceneAccessibility.Item(node: node,
-                label: String(format: "Level %d".localized(), level),
+                label: LevelCatalog.title(for: level),
                 value: { [weak self] in self?.levelAccessibilityValue(level) },
                 hint: level > progress.unlockedLevel ? "Finish earlier levels to unlock".localized() : nil,
                 isEnabled: { [weak self] in
@@ -478,7 +492,7 @@ class MenuScene: SKScene {
         guard let firstLevel = levelPoints.first else { return }
         let targetY = frame.midY - firstLevel.y
         moveableNode.removeAction(forKey: "focusLevel")
-        if UIAccessibility.isReduceMotionEnabled {
+        if GameSettings.reduceMotionEnabled {
             moveableNode.position.y = targetY
         } else {
             let move = SKAction.moveTo(y: targetY, duration: 0.25)

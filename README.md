@@ -25,6 +25,7 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 
 ### Key Features
 - **16 Challenging Levels**: Includes three remix challenges and three handcrafted bonus puzzles
+- **Named Puzzles**: Recognizable level titles in Records, the game HUD, and VoiceOver descriptions
 - **Physics-Based Gameplay**: Realistic physics simulation using SpriteKit
 - **Intuitive Touch Controls**: Simple tap-to-remove obstacle mechanics
 - **Progressive Difficulty**: Levels become more challenging as you advance
@@ -35,13 +36,15 @@ The panda is taking a nap, don't wake her up! In this physics-based puzzle game,
 - **Help Anytime**: Revisit the controls and rules through Settings → How to Play
 - **Optional Level Hints**: Ask for a gentle nudge in Settings while a puzzle is paused
 - **Personal Bests**: Track removals and beat your best winning count on each level
-- **Completion Postcard**: Earn the Nap Champion reward after finishing all 16 levels
+- **Shareable Completion Postcard**: Earn Nap Champion after finishing all 16 levels and share your bedtime postcard
 - **Mac Keyboard Controls**: R to retry, L for levels, S for settings, and N for the next level after a win
-- **Replay Records**: Browse completed, available, and locked levels with their winning records
+- **Replay Records**: Filter levels by availability, missing records, or challenge medals still to earn
+- **Surprise Replay**: Let Records choose a random puzzle from your completed levels
 - **Optional Challenge Medals**: Beat verified removal targets on the three bonus levels
 - **Clear Loss Guidance**: See whether Panda tipped too far or reached the boundary
 - **Audio Balance**: Set independent music and effects volumes while keeping the mute switches
 - **VoiceOver Controls**: Explore the level map, choose levels, activate game controls, and remove obstacles
+- **Calmer Animations**: Reduce decorative motion through Settings, with device Reduce Motion always respected
 - **Multi-language Support**: Available in English and Chinese (Simplified & Traditional)
 
 ## 🎯 How to Play
@@ -57,11 +60,15 @@ The first level highlights a removable block until you make your first move. Ope
 
 Choose **Continue: Level N** on the map to start the highest unlocked puzzle. After completing all 16 levels, **Replay Levels** scrolls the map back to the first level so you can choose a favorite. Settings → **How to Play** explains the rules without resetting your tutorial or progress; gameplay stays paused until you close Settings. While playing, Settings also offers an optional hint for the current level.
 
-Each removable block counts once; the connected stone structure counts as one removal. Personal bests update only after a win, and Retry resets the current attempt's count. Completing all 16 levels earns a bedtime postcard that you can revisit in Settings. Players who completed the earlier 13-level release keep that progress and immediately unlock Level 14.
+Each removable block counts once; the connected stone structure counts as one removal. Personal bests update only after a win, and Retry resets the current attempt's count. Completing all 16 levels earns a bedtime postcard that you can revisit through **Settings → Nap Champion**. Choose **Share Postcard** there to open the system share sheet and choose a destination. Players who completed the earlier 13-level release keep that progress and immediately unlock Level 14.
 
 Open **Records** on the level map to choose a puzzle and review its best winning count. Older completed levels can show **No record yet** until you replay them. Optional medals use verified targets: 2 removals for Level 14, and 3 each for Levels 15 and 16. Targets do not affect unlocking, and medals are derived from your existing best records.
 
+Use **Filter** in Records to show **All**, **Available**, **No record**, or **Medals to earn**. **Surprise Replay** chooses only from completed levels and becomes available after your first completion. Each puzzle now has a name, such as **Quiet Arch**, **Double Decker**, or **Stone Shelter**, shown alongside its level number.
+
 Settings has separate music and effects volume sliders. These control the game's audio balance; device volume still controls the final output. Changing volumes or unmuting in Settings keeps the music paused until Settings closes. With VoiceOver, use the adjustable **Level map** control to move between levels, then activate an unlocked level. Game controls, obstacle positions relative to the bed, result choices, and Records are labeled for VoiceOver.
+
+Turn on **Calmer Animations** in Settings to reduce decorative motion. The game's effective motion preference also respects the device's **Reduce Motion** setting. Puzzle physics and level progression retain the same rules.
 
 ## 🛠 Technical Details
 
@@ -132,6 +139,12 @@ swiftc 'Panda Nap/Model/AudioLevels.swift' Scripts/validate-audio-levels.swift -
 /tmp/panda-audio-check
 swiftc 'Panda Nap/Model/LevelRecordStore.swift' 'Panda Nap/Model/LevelChallenge.swift' Scripts/validate-level-challenges.swift -o /tmp/panda-challenge-check
 /tmp/panda-challenge-check
+swiftc 'Panda Nap/Model/LevelProgress.swift' 'Panda Nap/Model/LevelRecordStore.swift' 'Panda Nap/Model/LevelChallenge.swift' 'Panda Nap/Model/ReplayOptions.swift' Scripts/validate-replay-options.swift -o /tmp/panda-replay-options-check
+/tmp/panda-replay-options-check
+swiftc 'Panda Nap/Model/LevelCatalog.swift' Scripts/validate-level-catalog.swift -o /tmp/panda-catalog-check
+/tmp/panda-catalog-check
+swiftc 'Panda Nap/Model/MotionPreferences.swift' Scripts/validate-motion-preferences.swift -o /tmp/panda-motion-check
+/tmp/panda-motion-check
 swiftc -parse-as-library Scripts/validate-bonus-levels.swift -o /tmp/panda-bonus-check -framework SpriteKit -framework Metal
 /tmp/panda-bonus-check
 ```

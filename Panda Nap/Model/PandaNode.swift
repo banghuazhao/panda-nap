@@ -49,7 +49,7 @@ class PandaNode: SKSpriteNode, EventListenerNode {
         move.timingMode = .easeOut
         let rotate = SKAction.rotate(toAngle: 0, duration: 0.5)
         rotate.timingMode = .easeOut
-        if UIAccessibility.isReduceMotionEnabled {
+        if GameSettings.reduceMotionEnabled {
             run(.group([move, rotate]))
         } else {
             let squash = SKAction.group([.scaleX(to: 1.08, duration: 0.12),

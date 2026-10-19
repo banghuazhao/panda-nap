@@ -59,7 +59,13 @@ class GameViewController: UIViewController {
             unlockedLevel: bestLevel,
             completedLevel: UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.completedLevel),
             totalLevels: Constants.totalLevel).allComplete
+        settings.onMotionChanged = { [weak scene] in
+            (scene as? GameScene)?.refreshMotionPreferences()
+            (scene as? MenuScene)?.refreshMotionPreferences()
+        }
         settings.onClose = { [weak scene] in
+            (scene as? GameScene)?.refreshMotionPreferences()
+            (scene as? MenuScene)?.refreshMotionPreferences()
             scene?.isPaused = false
             SKTAudio.sharedInstance().resumeBackgroundMusic()
         }
@@ -167,8 +173,17 @@ class GameViewController: UIViewController {
 
 private final class GameSettingsViewController: UITableViewController {
     var onClose: (() -> Void)?
+    var onMotionChanged: (() -> Void)?
     var currentLevel: Int?
     var allLevelsComplete = false
+
+    private var calmerAnimationsRow: Int {
+        #if targetEnvironment(macCatalyst)
+        return 4
+        #else
+        return 5
+        #endif
+    }
 
     private var helpPages: [GameHelpViewController.Content] {
         var pages: [GameHelpViewController.Content] = [.instructions]
@@ -209,11 +224,7 @@ private final class GameSettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 2 { return helpPages.count }
         guard section == 1 else {
-            #if targetEnvironment(macCatalyst)
-            return 4
-            #else
-            return 5
-            #endif
+            return calmerAnimationsRow + 1
         }
         #if !targetEnvironment(macCatalyst)
         return 2
@@ -231,7 +242,8 @@ private final class GameSettingsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        let isMotionSetting = indexPath.section == 0 && indexPath.row == calmerAnimationsRow
+        let cell = UITableViewCell(style: isMotionSetting ? .subtitle : .default, reuseIdentifier: nil)
         cell.textLabel?.font = .preferredFont(forTextStyle: .body)
         cell.textLabel?.adjustsFontForContentSizeCategory = true
         cell.textLabel?.numberOfLines = 0
@@ -258,6 +270,25 @@ private final class GameSettingsViewController: UITableViewController {
                 }
             }
             return volumeCell
+        }
+        if isMotionSetting {
+            let title = "Calmer Animations".localized()
+            let detail = "Reduce decorative motion. The device Reduce Motion setting is always respected.".localized()
+            cell.textLabel?.text = title
+            cell.detailTextLabel?.text = detail
+            cell.detailTextLabel?.font = .preferredFont(forTextStyle: .subheadline)
+            cell.detailTextLabel?.adjustsFontForContentSizeCategory = true
+            cell.detailTextLabel?.numberOfLines = 0
+            cell.detailTextLabel?.textColor = .secondaryLabel
+            cell.selectionStyle = .none
+            let toggle = UISwitch()
+            toggle.tag = 3
+            toggle.isOn = GameSettings.calmerAnimationsEnabled
+            toggle.accessibilityLabel = title
+            toggle.accessibilityHint = detail
+            toggle.addTarget(self, action: #selector(settingChanged(_:)), for: .valueChanged)
+            cell.accessoryView = toggle
+            return cell
         }
         let toggleIndex = indexPath.row / 2
         let titles = ["Music".localized(), "Sound Effects".localized(), "Haptics".localized()]
@@ -322,6 +353,9 @@ private final class GameSettingsViewController: UITableViewController {
         switch sender.tag {
         case 0: GameSettings.musicEnabled = sender.isOn
         case 1: GameSettings.effectsEnabled = sender.isOn
+        case 3:
+            GameSettings.calmerAnimationsEnabled = sender.isOn
+            onMotionChanged?()
         default: GameSettings.hapticsEnabled = sender.isOn
         }
     }
@@ -414,6 +448,13 @@ private final class GameHelpViewController: UIViewController {
 
     var content: Content = .instructions
 
+    private var hasEarnedPostcard: Bool {
+        LevelProgress(
+            unlockedLevel: UserDefaults.standard.object(forKey: Constants.UserDefaultsKeys.bestLevel) as? Int ?? bestLevel,
+            completedLevel: UserDefaults.standard.integer(forKey: Constants.UserDefaultsKeys.completedLevel),
+            totalLevels: Constants.totalLevel).allComplete
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = content.title
@@ -446,6 +487,13 @@ private final class GameHelpViewController: UIViewController {
             sections = [("A gentle nudge".localized(), text),
                         ("Try another approach".localized(), "Use Retry to restart the level, or Levels to choose an unlocked level.".localized())]
         case .reward:
+            if hasEarnedPostcard {
+                let share = UIBarButtonItem(barButtonSystemItem: .action, target: self,
+                                           action: #selector(sharePostcard))
+                share.accessibilityLabel = "Share Postcard".localized()
+                share.accessibilityHint = "Share your Nap Champion postcard.".localized()
+                navigationItem.rightBarButtonItem = share
+            }
             if let image = UIImage(named: "panda_sleep") {
                 let artwork = UIImageView(image: image)
                 artwork.contentMode = .scaleAspectFit
@@ -492,5 +540,21 @@ private final class GameHelpViewController: UIViewController {
             instructions.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -24),
             instructions.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -40)
         ])
+    }
+
+    @objc private func sharePostcard() {
+        guard case .reward = content, hasEarnedPostcard,
+              presentedViewController == nil,
+              navigationController?.presentedViewController == nil,
+              navigationController?.topViewController === self,
+              view.window != nil else { return }
+        let sheet = UIActivityViewController(activityItems: [CompletionPostcard.image()], applicationActivities: nil)
+        if let popover = sheet.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.safeAreaInsets.top,
+                                        width: 1, height: 1)
+        }
+        present(sheet, animated: true)
     }
 }

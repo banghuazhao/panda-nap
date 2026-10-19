@@ -35,6 +35,7 @@ class GameScene: SKScene {
     private var retryButton: SKShapeNode?
     private var settingsButton: SKShapeNode?
     private var levelBadge: SKShapeNode?
+    private var levelNameBadge: SKShapeNode?
     private var removalsBadge: SKShapeNode?
     private var bestBadge: SKShapeNode?
     private var targetBadge: SKShapeNode?
@@ -50,6 +51,7 @@ class GameScene: SKScene {
     private var accessibilityObstacleNumbers: [ObjectIdentifier: Int] = [:]
     private var resultAccessibilitySummary = ""
     private var pointScale: CGFloat = 1
+    private var motionObserver: NSObjectProtocol?
 
     var bedNode: BedNode!
     var pandaNode: PandaNode!
@@ -122,6 +124,9 @@ class GameScene: SKScene {
         installHUD()
         layoutHUD()
         installTutorial()
+        motionObserver = NotificationCenter.default.addObserver(
+            forName: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil, queue: .main
+        ) { [weak self] _ in self?.refreshMotionPreferences() }
         installAccessibility()
         SceneAccessibility.announceScene(on: view, scene: self)
 
@@ -144,6 +149,8 @@ class GameScene: SKScene {
 
     override func willMove(from view: SKView) {
         super.willMove(from: view)
+        if let motionObserver { NotificationCenter.default.removeObserver(motionObserver) }
+        motionObserver = nil
         SceneAccessibility.clear(from: view, scene: self)
         #if !targetEnvironment(macCatalyst)
         if let privacyObserver { NotificationCenter.default.removeObserver(privacyObserver) }
@@ -167,6 +174,16 @@ class GameScene: SKScene {
         bestBadge = pill("", name: "best", width: 100, height: 35, fill: recordFill)
         [levelsButton, retryButton, settingsButton, levelBadge, removalsBadge, bestBadge]
             .compactMap { $0 }.forEach(hud.addChild)
+        if let name = LevelCatalog.name(for: currentLevel) {
+            let badge = pill(name, name: "levelName", width: 108, height: 52, fill: recordFill)
+            if let label = badge.children.first as? SKLabelNode {
+                label.numberOfLines = 2
+                label.preferredMaxLayoutWidth = 92
+                label.lineBreakMode = .byWordWrapping
+            }
+            hud.addChild(badge)
+            levelNameBadge = badge
+        }
         if let target = LevelChallenge.targetRemovals(for: currentLevel) {
             targetBadge = pill(String(format: "Target: %d".localized(), target), name: "target",
                                width: 100, height: 35, fill: recordFill)
@@ -194,7 +211,7 @@ class GameScene: SKScene {
 
         let label = SKLabelNode(fontNamed: "AvenirNext-DemiBold")
         label.text = title
-        label.fontSize = ["hint", "removals", "best", "target"].contains(name) ? 14 : (name == "levelBadge" ? 16 : 18)
+        label.fontSize = ["hint", "removals", "best", "target", "levelName"].contains(name) ? 14 : (name == "levelBadge" ? 16 : 18)
         label.fontColor = .white
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
@@ -221,6 +238,8 @@ class GameScene: SKScene {
         settingsButton.position = CGPoint(x: frame.midX, y: top)
         levelBadge.setScale(pointScale)
         levelBadge.position = CGPoint(x: levelsButton.position.x, y: top - 54 * pointScale)
+        levelNameBadge?.setScale(pointScale)
+        levelNameBadge?.position = CGPoint(x: levelsButton.position.x, y: top - 103 * pointScale)
         removalsBadge?.setScale(pointScale)
         removalsBadge?.position = CGPoint(x: right - 50 * pointScale, y: top - 54 * pointScale)
         bestBadge?.setScale(pointScale)
@@ -248,11 +267,30 @@ class GameScene: SKScene {
         halo.zPosition = 1.5
         addChild(halo)
         tutorialHalo = halo
-        if !UIAccessibility.isReduceMotionEnabled {
-            halo.run(.repeatForever(.sequence([.fadeAlpha(to: 0.35, duration: 0.7),
-                                               .fadeAlpha(to: 1, duration: 0.7)])))
-        }
+        refreshMotionPreferences()
         layoutTutorial()
+    }
+
+    /// Existing gameplay and removal actions keep their timing; only decoration changes.
+    func refreshMotionPreferences() {
+        let reduceMotion = GameSettings.reduceMotionEnabled
+        if let tutorialHalo {
+            tutorialHalo.removeAction(forKey: "tutorialPulse")
+            tutorialHalo.alpha = 1
+            if !reduceMotion {
+                tutorialHalo.run(.repeatForever(.sequence([.fadeAlpha(to: 0.35, duration: 0.7),
+                                                          .fadeAlpha(to: 1, duration: 0.7)])),
+                                 withKey: "tutorialPulse")
+            }
+        }
+        if reduceMotion {
+            children.filter { $0.name == "feedbackParticle" }.forEach { $0.removeFromParent() }
+            if let resultCard {
+                resultCard.removeAllActions()
+                resultCard.setScale(1)
+                resultCard.alpha = 1
+            }
+        }
     }
 
     private func layoutTutorial() {
@@ -368,7 +406,7 @@ class GameScene: SKScene {
         if let retryButton { items.append(commandItem(retryButton, title: "Retry".localized(), command: .retry)) }
         if let levelBadge {
             items.append(SceneAccessibility.Item(node: levelBadge,
-                label: String(format: "Level %d".localized(), currentLevel),
+                label: LevelCatalog.title(for: currentLevel),
                 value: { [weak self] in
                     guard let self else { return nil }
                     var values = [String(format: "Removed: %d".localized(), self.removalCount)]
@@ -439,13 +477,14 @@ class GameScene: SKScene {
     }
 
     private func burst(at point: CGPoint, color: SKColor, count: Int, distance: CGFloat) {
-        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        guard !GameSettings.reduceMotionEnabled else { return }
         for index in 0..<count {
             let fragment = SKShapeNode(circleOfRadius: CGFloat.random(in: 2.5...5) * pointScale)
             fragment.fillColor = color
             fragment.strokeColor = .clear
             fragment.position = point
             fragment.zPosition = 115
+            fragment.name = "feedbackParticle"
             addChild(fragment)
 
             let angle = CGFloat(index) * (.pi * 2 / CGFloat(count)) + CGFloat.random(in: -0.25...0.25)
@@ -483,7 +522,7 @@ class GameScene: SKScene {
         addChild(message)
         resultCard = message
         resultAccessibilitySummary = [title, detail, statistics].compactMap { $0 }.joined(separator: ". ")
-        message.appear(reduceMotion: UIAccessibility.isReduceMotionEnabled)
+        message.appear(reduceMotion: GameSettings.reduceMotionEnabled)
         installAccessibility()
         if UIAccessibility.isVoiceOverRunning {
             // The result card fades in; announce after it has visible geometry.
